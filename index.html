@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#0E0E0F">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
 <title>Rounds</title>
 <meta name="description" content="Count revision rounds, price extra work in seconds and send the client a ready message.">
 <link rel="manifest" href="manifest.webmanifest">
@@ -492,27 +492,9 @@ button.act-row:hover{ background:#1E1E21; }
 .thanks .circ path{ stroke-dasharray:30; stroke-dashoffset:30; animation:dash .45s var(--ease) .3s forwards; }
 .thanks b{ font-size:20px; } .thanks span{ color:#55555B; font-size:14px; }
 
-/* ── iOS home-screen app: fill the whole screen ── */
-html.standalone{ padding:0; height:100%; }
-html.standalone body{ position:fixed; top:0; left:0; right:0; height:var(--app-h,100%); padding-top:env(safe-area-inset-top,0px); box-sizing:border-box; transform:translateZ(0); }
-html.standalone .tabbar{ bottom:calc(10px + env(safe-area-inset-bottom,0px)); }
 </style>
 </head>
 <body>
-<script>
-(function(){
-  var d=document.documentElement;
-  var sa=false; try{ sa=window.navigator.standalone===true||window.matchMedia('(display-mode: standalone)').matches; }catch(e){}
-  if(!sa) return;
-  d.classList.add('standalone');
-  function fit(){
-    var land=window.innerWidth>window.innerHeight;
-    var full=land?Math.min(screen.width,screen.height):Math.max(screen.width,screen.height);
-    d.style.setProperty('--app-h',Math.max(window.innerHeight,full)+'px');
-  }
-  fit(); window.addEventListener('resize',fit); window.addEventListener('orientationchange',function(){ setTimeout(fit,250); });
-})();
-</script>
 <div class="splash" id="splash" role="status" aria-label="Loading Rounds">
   <svg class="mark" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
     <g class="spin"><path class="arc" pathLength="100" d="M52 24A22 22 0 1 0 54 38"/><path class="head" pathLength="100" d="M53 9v15H38"/></g>
