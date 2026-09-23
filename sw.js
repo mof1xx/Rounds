@@ -1,5 +1,5 @@
 /* Rounds service worker: app shell works offline. Bump VERSION on every release. */
-const VERSION = 'rounds-v1.0.3';
+const VERSION = 'rounds-v1.0.5';
 const SHELL = ['./', 'index.html', 'manifest.webmanifest', 'favicon.svg', 'icon-192.png', 'icon-512.png', 'apple-touch-icon.png'];
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(VERSION).then(c => c.addAll(SHELL)).then(() => self.skipWaiting()));
