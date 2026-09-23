@@ -1,0 +1,19 @@
+{
+  "name": "Rounds",
+  "short_name": "Rounds",
+  "description": "Count revision rounds, price extra work in seconds and send the client a ready message.",
+  "id": "/",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#0E0E0F",
+  "theme_color": "#0E0E0F",
+  "lang": "en",
+  "categories": ["business", "productivity", "finance"],
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
