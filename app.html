@@ -213,6 +213,7 @@ textarea.inp{ height:auto; min-height:48px; padding:13px 14px; resize:none; line
   .ob-copy h1{ font-size:62px; }
 }
 
+@media (max-width:899px){ .ob-last{ grid-template-rows:230px auto; } }
 .ob-foot{ display:flex; align-items:center; gap:10px; margin-top:22px; color:var(--dim); max-width:400px; }
 .ob-foot .lnk{ margin-left:auto; }
 /* ── home ── */
@@ -465,6 +466,14 @@ button.act-row:hover{ background:#1E1E21; }
 .stat{ display:flex; flex-direction:column; } .stat b{ margin-top:auto; padding-top:16px; }
 .empty-proj{ display:grid; gap:12px; padding:24px; border:1.5px dashed var(--c3); background:transparent; }
 .empty-proj b{ font-size:19px; font-weight:700; letter-spacing:-.01em; } .empty-proj p{ margin:0; color:var(--mu); max-width:52ch; }
+.pw-eye{ position:absolute; right:6px; top:50%; transform:translateY(-50%); width:38px; height:38px; border-radius:10px; display:grid; place-items:center; color:var(--dim); }
+.pw-eye.on{ color:var(--tx); }
+.keybox{ display:flex; align-items:center; gap:12px; justify-content:space-between; background:var(--c2); border-radius:16px; padding:16px; flex-wrap:wrap; }
+.keybox code{ font:600 20px/1.2 ui-monospace,Menlo,monospace; letter-spacing:.06em; color:var(--tx); }
+.consent-row{ display:flex; gap:10px; align-items:center; font-size:14.5px; color:var(--mu); cursor:pointer; }
+.consent-row input{ width:20px; height:20px; accent-color:#F4F4F5; }
+.au-note{ font-size:13.5px; color:var(--mu); min-height:20px; margin-top:-4px; } .au-note.err{ color:#FCA5A5; }
+.ob-or{ text-align:center; color:var(--dim); font-size:13px; margin:14px 0 -8px; }
 /* ── sheets ── */
 .scrim{ position:fixed; inset:0; z-index:70; background:rgba(0,0,0,.6); -webkit-backdrop-filter:blur(3px); backdrop-filter:blur(3px); display:flex; align-items:flex-end; justify-content:center; animation:fade .25s both; }
 .sheet{ width:100%; max-height:92%; overflow:auto; background:var(--c1); border-radius:26px 26px 0 0; padding:10px 20px calc(24px + env(safe-area-inset-bottom,0px)); animation:sheetUp .46s var(--ease) both; display:grid; gap:16px; align-content:start; }
@@ -592,9 +601,12 @@ const I={
 en:{
   nav_act:'Activity', nav_acc:'Account', pg_act_d:'Everything that happened, by day', pg_acc_d:'Profile, sync, language', pg_help_d:'A short guided tour of the app',
   act_d:'Feedback, deliveries and approvals across all projects.', f_all:'All', f_money:'Money', f_work:'Rounds', act_empty:'Nothing here yet.', today:'Today', yesterday:'Yesterday',
-  acc_d:'Your profile and settings.', acc_help:'Help', acc_prefs:'Preferences', acc_claude:'Signed in with Claude', acc_local_short:'Profile on this device',
+  acc_d:'Your profile and settings.', acc_help:'Help', acc_prefs:'Preferences', acc_claude:'Signed in', acc_local_short:'Profile on this device',
   sy_on:'Synced across your devices', sy_on_d:v=>`Projects, estimates and settings are saved to your account. Last sync ${v.when}.`, sy_ing:'Syncing…', sy_err:'Sync paused', sy_err_d:'Changes are kept on this device and will sync when the connection is back.',
   sy_conn:'Connecting…', sy_conn_d:'Checking your account.', sy_off:'Saved on this device', sy_off_d:'Your projects and estimates are stored on this device and work offline. Sync across devices comes with Rounds accounts.',
+  au_rec_t:'Reset your password', au_rec_d:'Enter your email, the recovery key you saved when creating the account, and a new password.', au_key:'Recovery key', au_newpw:'New password', au_rec_go:'Set new password', au_back:'Back to sign in', au_ok_rec:'Password changed. You are signed in.', key_t:'Save your recovery key', key_d:'If you ever forget your password, this key is the only way back into your account. Take a screenshot or keep it in your notes.', key_copy:'Copy', key_saved:'I saved my recovery key', key_done:'Done', del_t:'Delete account', del_d:'This deletes your account and everything synced to it. Projects on this device stay. Enter your password to confirm.', del_go:'Delete my account', t_deleted:'Account deleted', ae_wrongkey:'Wrong email or recovery key.', ae_nokey:'Please enter your recovery key.', ae_noapi:'Accounts are not set up yet.', ae_expired:'Please sign in again.',
+  au_open:'Create an account', au_have:'I already have an account', au_up_t:'Create your account', au_in_t:'Welcome back', au_d:'Keep your projects on all your devices. Use the same email and password everywhere.', au_up:'New account', au_in:'Sign in', au_pw:'Password', au_pw_ph:'At least 8 characters', au_show:'Show password', au_hint:'Use at least 8 characters. Mixing letters and numbers makes it stronger.', au_up_go:'Create account', au_in_go:'Sign in', au_wait:'One moment…', au_forgot:'Forgot password?', au_sent:v=>`We sent a reset link to ${v.e}. Check your inbox and spam folder.`, au_ok_up:'Account created. Your projects now sync.', au_ok_in:'Signed in. Your projects are syncing.', ae_email:'Please enter a valid email.', ae_short:'The password needs at least 8 characters.', ae_nopw:'Please enter your password.', ae_used:'There is already an account with this email. Switch to Sign in.', ae_weak:'This password is too weak. Try a longer one.', ae_wrong:'Wrong email or password.', ae_many:'Too many attempts. Please wait a few minutes.', ae_net:'No connection. Check the internet and try again.', ae_off:'Sign-in with email is turned off in Firebase.', ae_other:'Something went wrong. Please try again.',
+  g_btn:'Continue with Google', g_or:'or set up without an account', g_as:v=>`Signed in as ${v.e}`, g_ok:'Signed in. Your projects now sync.', g_out:'Sign out', g_bye:'Signed out. Your data stays on this device.', g_err:'Could not sign in. Please try again.', g_blocked:'Sign-in window was blocked. Open Rounds in Safari or Chrome and try again.', g_na:'Sign-in is not available yet.', sy_login_d:'Create an account to keep your projects on all your devices.',
   sy_short_on:'Synced', sy_short_off:'This device', just_now:'just now',
   menu_open:'Open menu', m_pages:'Go to', m_quick:'Quick actions', q_est:'New estimate', q_fb:'Add feedback', q_np:'New project', m_proj:'Your projects', m_prefs:'Language and currency', m_help:'Help',
   pg_home_d:'Greeting, earnings and what needs you', pg_est_d:'Price changes and copy the message', pg_proj_d:v=>`${v.n} ${v.n===1?'project':'projects'}, ${v.a} collecting feedback`, pg_set_d:'Name, hourly rate, currency',
@@ -657,9 +669,12 @@ en:{
 ru:{
   nav_act:'События', nav_acc:'Аккаунт', pg_act_d:'Всё, что происходило, по дням', pg_acc_d:'Профиль, синхронизация, язык', pg_help_d:'Короткий тур по приложению',
   act_d:'Правки, сдачи и подтверждения по всем проектам.', f_all:'Все', f_money:'Деньги', f_work:'Раунды', act_empty:'Пока пусто.', today:'Сегодня', yesterday:'Вчера',
-  acc_d:'Ваш профиль и настройки.', acc_help:'Помощь', acc_prefs:'Настройки', acc_claude:'Вход через Claude', acc_local_short:'Профиль на этом устройстве',
+  acc_d:'Ваш профиль и настройки.', acc_help:'Помощь', acc_prefs:'Настройки', acc_claude:'Вы вошли в аккаунт', acc_local_short:'Профиль на этом устройстве',
   sy_on:'Синхронизировано между устройствами', sy_on_d:v=>`Проекты, оценки и настройки сохранены в аккаунте. Последняя синхронизация ${v.when}.`, sy_ing:'Синхронизация…', sy_err:'Синхронизация на паузе', sy_err_d:'Изменения сохранены на этом устройстве и синхронизируются, когда связь вернётся.',
   sy_conn:'Подключение…', sy_conn_d:'Проверяем аккаунт.', sy_off:'Сохранено на этом устройстве', sy_off_d:'Проекты и оценки хранятся на этом устройстве и работают без интернета. Синхронизация между устройствами появится вместе с аккаунтами Rounds.',
+  au_rec_t:'Сброс пароля', au_rec_d:'Введите почту, ключ восстановления, который вы сохранили при создании аккаунта, и новый пароль.', au_key:'Ключ восстановления', au_newpw:'Новый пароль', au_rec_go:'Сохранить новый пароль', au_back:'Назад ко входу', au_ok_rec:'Пароль изменён. Вы вошли.', key_t:'Сохраните ключ восстановления', key_d:'Если забудете пароль, этот ключ — единственный способ вернуться в аккаунт. Сделайте скриншот или сохраните в заметки.', key_copy:'Скопировать', key_saved:'Я сохранил(а) ключ', key_done:'Готово', del_t:'Удалить аккаунт', del_d:'Аккаунт и всё, что в нём синхронизировано, будут удалены. Проекты на этом устройстве останутся. Введите пароль для подтверждения.', del_go:'Удалить мой аккаунт', t_deleted:'Аккаунт удалён', ae_wrongkey:'Неверная почта или ключ восстановления.', ae_nokey:'Введите ключ восстановления.', ae_noapi:'Аккаунты ещё не настроены.', ae_expired:'Войдите в аккаунт снова.',
+  au_open:'Создать аккаунт', au_have:'У меня уже есть аккаунт', au_up_t:'Создайте аккаунт', au_in_t:'С возвращением', au_d:'Проекты будут на всех ваших устройствах. Входите везде с одной почтой и паролем.', au_up:'Новый аккаунт', au_in:'Вход', au_pw:'Пароль', au_pw_ph:'Не меньше 8 символов', au_show:'Показать пароль', au_hint:'Не меньше 8 символов. Буквы вместе с цифрами делают пароль надёжнее.', au_up_go:'Создать аккаунт', au_in_go:'Войти', au_wait:'Секунду…', au_forgot:'Забыли пароль?', au_sent:v=>`Мы отправили ссылку для сброса пароля на ${v.e}. Проверьте входящие и спам.`, au_ok_up:'Аккаунт создан. Проекты теперь синхронизируются.', au_ok_in:'Вы вошли. Проекты синхронизируются.', ae_email:'Введите корректный email.', ae_short:'Пароль должен быть не короче 8 символов.', ae_nopw:'Введите пароль.', ae_used:'Аккаунт с этой почтой уже есть. Переключитесь на «Вход».', ae_weak:'Слишком простой пароль. Попробуйте длиннее.', ae_wrong:'Неверная почта или пароль.', ae_many:'Слишком много попыток. Подождите несколько минут.', ae_net:'Нет соединения. Проверьте интернет и попробуйте снова.', ae_off:'Вход по почте выключен в Firebase.', ae_other:'Что-то пошло не так. Попробуйте ещё раз.',
+  g_btn:'Войти через Google', g_or:'или настроить без аккаунта', g_as:v=>`Вы вошли как ${v.e}`, g_ok:'Вы вошли. Проекты теперь синхронизируются.', g_out:'Выйти из аккаунта', g_bye:'Вы вышли. Данные остались на этом устройстве.', g_err:'Не удалось войти. Попробуйте ещё раз.', g_blocked:'Окно входа заблокировано. Откройте Rounds в Safari или Chrome и попробуйте снова.', g_na:'Вход пока недоступен.', sy_login_d:'Создайте аккаунт, чтобы проекты были на всех ваших устройствах.',
   sy_short_on:'Синхронизировано', sy_short_off:'Это устройство', just_now:'только что',
   menu_open:'Открыть меню', m_pages:'Перейти', m_quick:'Быстрые действия', q_est:'Новая оценка', q_fb:'Добавить правки', q_np:'Новый проект', m_proj:'Ваши проекты', m_prefs:'Язык и валюта', m_help:'Помощь',
   pg_home_d:'Приветствие, заработок и что требует внимания', pg_est_d:'Посчитать правки и скопировать сообщение', pg_proj_d:v=>`${v.n} ${pl(v.n,'проект','проекта','проектов')}, в ${v.a} собираем правки`, pg_set_d:'Имя, ставка, валюта',
@@ -817,7 +832,7 @@ function tile(p){ const c=TC[p.color]||TC.warm; return `<span class="tile" style
 const acct={state:'local',name:'',email:'',avatar:'',uid:null,at:0};
 function dispName(){ return (S.name||acct.name||'').trim(); }
 function firstName(){ return dispName().split(/\s+/)[0]||''; }
-function avatarHTML(big){ if(acct.avatar) return `<span class="avatar"><img src="${esc(acct.avatar)}" alt=""></span>`; return `<span class="avatar">${esc(dispName()?initials(dispName()):'R')}</span>`; }
+function avatarHTML(big){ if(acct.avatar) return `<span class="avatar"><img src="${esc(acct.avatar)}" alt="" referrerpolicy="no-referrer"></span>`; return `<span class="avatar">${esc(dispName()?initials(dispName()):'R')}</span>`; }
 function syncLine(){ return acct.state==='synced'||acct.state==='syncing'?t('sy_short_on'):acct.state==='connecting'?t('sy_conn'):t('sy_short_off'); }
 let DEVICE='d'+Math.random().toString(36).slice(2,12);
 try{ const dv=localStorage.getItem('rounds:device'); if(dv) DEVICE=dv; else localStorage.setItem('rounds:device',DEVICE); }catch(e){}
@@ -1209,6 +1224,7 @@ function vAccount(){
   <div class="acc">
     <div style="display:grid;gap:14px;min-width:0">
       <div class="card acc-id stag" style="--i:${i++}">${avatarHTML(true)}<div style="min-width:0"><b>${esc(acct.name||S.name||t('you'))}</b><span>${esc(acct.email||(acct.uid?t('acc_claude'):t('acc_local_short')))}</span></div></div>
+      ${acct.cloud&&!acct.uid?`<div class="stag" style="--i:${i++}">${authBtns()}</div>`:''}
       <div class="card sync stag ${on?'on':''}" style="--i:${i++}" id="syncCard">${syncCardHTML()}</div>
       <div class="card stag" style="--i:${i++};display:grid;gap:14px">
         <h2 class="h2">${esc(t('acc_help'))}</h2>
@@ -1216,6 +1232,7 @@ function vAccount(){
         <button class="hbtn press" data-act="m-replay">${ic('send')}${esc(t('replay'))}${ic('arrow',18)}</button>
         <button class="hbtn press" data-act="m-demo">${ic('proj')}${esc(t('demo'))}${ic('arrow',18)}</button>
         <button class="lnk" data-act="m-reset" style="justify-self:start">${esc(t('wipe'))}</button>
+        ${acct.uid?`<div style="display:flex;gap:18px;flex-wrap:wrap"><button class="lnk" data-act="g-signout">${esc(t('g_out'))}</button><button class="lnk" data-act="del-open">${esc(t('del_t'))}</button></div>`:''}
       </div>
     </div>
     <div class="card stag" style="--i:${i++};display:grid;gap:18px;align-content:start">
@@ -1230,7 +1247,7 @@ function vAccount(){
 function syncCardHTML(){
   const st=acct.state; const when=acct.at?rel(acct.at):'';
   const title=st==='synced'?t('sy_on'):st==='syncing'?t('sy_ing'):st==='error'?t('sy_err'):st==='connecting'?t('sy_conn'):t('sy_off');
-  const desc=st==='synced'||st==='syncing'?t('sy_on_d',{when:when||t('just_now')}):st==='error'?t('sy_err_d'):st==='connecting'?t('sy_conn_d'):t('sy_off_d');
+  const desc=st==='synced'||st==='syncing'?t('sy_on_d',{when:when||t('just_now')}):st==='error'?t('sy_err_d'):st==='connecting'?t('sy_conn_d'):(acct.cloud?t('sy_login_d'):t('sy_off_d'));
   return `<span class="sdot"></span><div><b>${esc(title)}</b><p>${esc(desc)}</p></div>${ic('cloud',22)}`;
 }
 function updAcct(){ const c=$('#syncCard'); if(c){ c.innerHTML=syncCardHTML(); c.classList.toggle('on',acct.state==='synced'||acct.state==='syncing'); } const sl=$('#sideSync'); if(sl) sl.textContent=syncLine(); }
@@ -1241,7 +1258,7 @@ function openSheet(html,onOpen){
   const root=$('#sheet'); root.innerHTML=`<div class="scrim" data-act="sheet-bg"><div class="sheet" role="dialog" aria-modal="true"><div class="grab"></div>${html}</div></div>`;
   syncSegs(root,true); if(onOpen) onOpen(root);
 }
-function closeSheet(){ const sc=$('#sheet .scrim'); S.sheetOpen=false; if(!sc) return; sc.classList.add('closing'); setTimeout(()=>{ $('#sheet').innerHTML=''; updateEstbar(); },reduced()?0:300); }
+function closeSheet(){ if(window.__pendingSession){ const j=window.__pendingSession; window.__pendingSession=null; setTimeout(()=>{ startSession(j); toast(t('au_ok_up')); },320); } const sc=$('#sheet .scrim'); S.sheetOpen=false; if(!sc) return; sc.classList.add('closing'); setTimeout(()=>{ $('#sheet').innerHTML=''; updateEstbar(); },reduced()?0:300); }
 function shSettings(){
   openSheet(`<h2>${esc(t('set_t'))}</h2>
     <label class="field"><span>${esc(t('f_name'))}</span><input class="inp" id="sName" value="${esc(S.name)}" placeholder="${esc(t('ph_name'))}"></label>
@@ -1334,10 +1351,12 @@ function renderOb(){
   const rate=ob.rate!=null?ob.rate:S.rate/100;
   $('#ob').innerHTML=`<div class="ob" id="obRoot">
     <div class="ob-top"><div class="ob-prog">${[0,1,2,3].map(k=>`<i class="${k<=i?'on':''}"></i>`).join('')}</div></div>
-    <div class="ob-body ${ob.dir}">
+    <div class="ob-body ${ob.dir} ${last?'ob-last':''}">
       <div class="ob-vis" aria-hidden="true">${obVis(i)}</div>
       <div class="anim-copy" style="align-self:end">
         <div class="ob-copy"><h1>${esc(t(titles[i]))}</h1><p>${esc(t(descs[i]))}</p></div>
+        ${last&&acct.cloud&&!acct.uid?`<div style="margin-top:24px;max-width:460px">${authBtns()}<div class="ob-or">${esc(t('g_or'))}</div></div>`:''}
+        ${last&&acct.uid?`<div class="chip g" style="margin-top:20px">${ic('check',14)}${esc(t('g_as',{e:acct.email||acct.name}))}</div>`:''}
         ${last?`<div class="ob-form" style="margin-top:24px">
           <label class="field"><span>${esc(t('f_name'))}</span><input class="inp" id="obName" value="${esc(ob.name||S.name)}" placeholder="${esc(t('ph_name'))}" autocomplete="given-name"></label>
           <div class="two"><label class="field"><span>${esc(t('f_rate'))}</span><span class="affix"><input class="inp tnum" id="obRate" inputmode="decimal" value="${esc(rate)}"><i>${esc(curSym())}/${S.lang==='ru'?'ч':'h'}</i></span></label>
@@ -1435,6 +1454,14 @@ document.addEventListener('click',e=>{
       if(a==='set-lang'){ closeSheet(); setTimeout(shSettings,320); }
       break; }
     case 'settings': go('account'); break;
+    case 'au-open': shAuth(el.dataset.mode); break;
+    case 'au-mode': auSwitch(el.dataset.v); break;
+    case 'au-eye': { const pw=$('#'+(el.dataset.for||'auPw')); pw.type=pw.type==='password'?'text':'password'; el.classList.toggle('on',pw.type==='text'); break; }
+    case 'au-to': auSwitch(el.dataset.mode); break;
+    case 'key-copy': copyText($('#rkey').textContent); copiedBtn(el); break;
+    case 'key-done': { const j=window.__pendingSession; window.__pendingSession=null; closeSheet(); if(j){ startSession(j); toast(t('au_ok_up')); } break; }
+    case 'del-open': shAuth('del'); break;
+    case 'g-signout': window.RoundsCloud.signOut().then(()=>toast(t('g_bye'))); break;
     case 'menu': openMenu(el); break;
     case 'menu-close': closeMenu(); break;
     case 'm-go': go(el.dataset.to); closeMenu(); break;
@@ -1518,6 +1545,7 @@ document.addEventListener('click',e=>{
       S.projects.unshift(p); save(); closeSheet(); setTimeout(()=>{ go('project',{pid:p.id}); toast(t('t_np')); },220); break; }
   }
 });
+document.addEventListener('submit',e=>{ if(e.target&&e.target.id==='auForm'){ e.preventDefault(); auSubmit(); } });
 document.addEventListener('keydown',e=>{
   if(e.key==='Escape'&&tour){ endTour(); return; }
   if(e.key==='Escape'&&$('#menu')){ closeMenu(); return; }
@@ -1531,6 +1559,7 @@ document.addEventListener('input',e=>{
   else if(id==='eClient'){ S.draft.client=e.target.value.slice(0,40); save(); estSum(); }
   else if(id==='eRate'){ const v=num(e.target.value,null); if(v!=null&&v>0){ S.draft.rate=Math.round(v*100); save(); $$('#estItems .item').forEach(el=>{ const it=estItem(el.dataset.id); if(it){ const p=$('.it-price',el); if(it.paid) p.textContent=money(price(it.mins,dRate())); } }); estSum(); } }
   else if(id==='clName'){ clUpdate(); }
+  else if(id==='keyOk'){ const d=$('#keyDone'); if(d) d.disabled=!e.target.checked; }
   else if(id==='acName'){ S.name=e.target.value.slice(0,40); save(); const b=$('.side .me b'); if(b) b.textContent=dispName()||t('you'); const a=$('.acc-id b'); if(a) a.textContent=acct.name||S.name||t('you'); }
   else if(id==='acRate'){ const v=num(e.target.value,null); if(v!=null&&v>0){ S.rate=Math.round(v*100); save(); } }
   else if(id==='obName'){ ob.name=e.target.value; const pv=$('#obPrev'); if(pv){ const f=ob.name.trim().split(/\s+/)[0]; pv.textContent=f?', '+f:''; } }
@@ -1548,7 +1577,127 @@ S.sheetOpen=false;
 if(S.route==='project'&&!P(S.pid)) S.route='home';
 renderChrome();
 if(!S.onboarded){ S.route='home'; renderView(false); startOb(); } else renderView(false);
-connect();
+
+/* ================= Accounts on Vercel (/api/r) ================= */
+const SKEY='rounds:session';
+let sess=null; try{ sess=JSON.parse(localStorage.getItem(SKEY)||'null'); }catch(_){}
+let cloudUnsub=null;
+function saveSess(){ try{ if(sess) localStorage.setItem(SKEY,JSON.stringify(sess)); else localStorage.removeItem(SKEY); }catch(_){} }
+async function api(action,body){
+  let r; try{ r=await fetch('/api/r',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(Object.assign({action:action},body||{}))}); }
+  catch(e){ const x=new Error('net'); x.code='net'; throw x; }
+  let j={}; try{ j=await r.json(); }catch(_){}
+  if(!r.ok||j.error){ const x=new Error(j.error||('http_'+r.status)); x.code=j.error||(r.status===404?'noapi':'server'); throw x; }
+  return j;
+}
+function startSession(j){ sess={token:j.token,uid:j.uid,email:j.email,name:j.name||''}; saveSess(); acct.cloud=true; onCloudAuth({uid:j.uid,name:j.name||'',email:j.email,avatar:''}); }
+function endSession(){ sess=null; saveSess(); onCloudAuth(null); }
+window.RoundsCloud={
+  signUp:(email,pw,name)=>api('signup',{email:email,password:pw,name:name}),
+  signIn:(email,pw)=>api('login',{email:email,password:pw}).then(j=>{ startSession(j); return j; }),
+  recover:(email,key,pw)=>api('recover',{email:email,recovery:key,password:pw}).then(j=>{ startSession(j); return j; }),
+  signOut:async()=>{ const tk=sess&&sess.token; endSession(); if(tk) api('logout',{token:tk}).catch(()=>{}); },
+  deleteAccount:pw=>api('delete',{token:sess.token,email:sess.email,password:pw}).then(()=>endSession())
+};
+function remoteDoc(){
+  const get=async()=>{ const j=await api('get',{token:sess.token}); return {exists:!!j.doc,data:()=>j.doc}; };
+  const guard=e=>{ if(e&&e.code==='auth'){ endSession(); toast(t('ae_expired')); } throw e; };
+  return {
+    set:d=>api('put',{token:sess.token,doc:d}).catch(guard),
+    get:()=>get().catch(guard),
+    onSnapshot:(n,err)=>{
+      let stop=false, busy=false;
+      const tick=async()=>{ if(stop||busy||!sess||document.hidden) return; busy=true;
+        try{ const sn=await get(); if(acct.state==='error'){ acct.state='synced'; acct.at=Date.now(); updAcct(); } n(sn); }
+        catch(e){ if(e.code==='auth'){ stop=true; endSession(); } else if(err) err(e); }
+        busy=false; };
+      const iv=setInterval(tick,30000); const vis=()=>{ if(!document.hidden) tick(); };
+      document.addEventListener('visibilitychange',vis); window.addEventListener('focus',vis);
+      return ()=>{ stop=true; clearInterval(iv); document.removeEventListener('visibilitychange',vis); window.removeEventListener('focus',vis); };
+    }
+  };
+}
+async function onCloudAuth(u){
+  if(cloudUnsub){ try{ cloudUnsub(); }catch(_){} cloudUnsub=null; }
+  if(!u){ dbRef=null; Object.assign(acct,{state:'local',uid:null,name:'',email:'',avatar:''}); renderChrome(); if(S.route==='account') renderView(false); else updAcct(); if($('#obRoot')&&ob.i===3){ obKeep(); renderOb(); } return; }
+  Object.assign(acct,{uid:u.uid,name:u.name,email:u.email,avatar:'',state:'connecting'});
+  if(!S.name&&u.name){ S.name=u.name.split(/\s+/)[0]; try{ localStorage.setItem(KEY,JSON.stringify(S)); }catch(_){} }
+  renderChrome(); updAcct();
+  if($('#obRoot')&&ob.i===3){ obKeep(); renderOb(); }
+  dbRef=remoteDoc();
+  try{
+    const snap=await dbRef.get();
+    if(snap.exists){ const d=snap.data(); if((d.updated||0)>(S.updated||0)) applyRemote(d); else if((S.updated||0)>(d.updated||0)) await push(); else { acct.state='synced'; acct.at=Date.now(); } }
+    else await push();
+    if(!dbRef) return;
+    cloudUnsub=dbRef.onSnapshot(sn=>{ if(!sn.exists) return; const d=sn.data(); if(d.device===DEVICE) return; if((d.updated||0)>(S.updated||0)) applyRemote(d); }, ()=>{ acct.state='error'; updAcct(); });
+    if(acct.state!=='error'){ acct.state='synced'; acct.at=acct.at||Date.now(); }
+  }catch(err){ if(sess) acct.state='error'; console.warn('Rounds sync',err&&err.code); }
+  renderChrome(); if(S.route==='account'||S.route==='home') renderView(false); else updAcct();
+}
+function cloudBoot(){
+  if(location.protocol==='file:') return;
+  if(sess&&sess.token){ acct.cloud=true; onCloudAuth({uid:sess.uid,name:sess.name,email:sess.email,avatar:''}); }
+  api('ping').then(()=>{ if(acct.cloud) return; acct.cloud=true; updAcct(); if(S.route==='account') renderView(false); if($('#obRoot')&&ob.i===3){ obKeep(); renderOb(); } }).catch(()=>{});
+}
+
+/* ----- auth sheet ----- */
+function authBtns(){ return `<button class="btn wide press" data-act="au-open" data-mode="up">${ic('user',18)}${esc(t('au_open'))}</button><button class="lnk" data-act="au-open" data-mode="in" style="display:block;margin:12px auto 0">${esc(t('au_have'))}</button>`; }
+let authMode='up';
+const EMAIL_RE=/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+function pwField(id,label,ac,ph){ return `<label class="field"><span>${esc(label)}</span><span class="affix"><input class="inp" id="${id}" type="password" autocomplete="${ac}" placeholder="${esc(ph||'')}"><button type="button" class="pw-eye" data-act="au-eye" data-for="${id}" aria-label="${esc(t('au_show'))}">${ic('eye',18)}</button></span></label>`; }
+function authBody(mode,email){
+  const em=`<label class="field"><span>Email</span><input class="inp" id="auEmail" type="email" autocomplete="email" inputmode="email" autocapitalize="off" spellcheck="false" placeholder="you@studio.com" value="${esc(email||'')}"></label>`;
+  if(mode==='up'||mode==='in') return `<h2>${esc(t(mode==='up'?'au_up_t':'au_in_t'))}</h2><p class="lede">${esc(t('au_d'))}</p>
+    <div>${seg('au-mode',[['up',t('au_up')],['in',t('au_in')]],mode)}</div>
+    <form id="auForm" novalidate style="display:grid;gap:14px">${em}${pwField('auPw',t('au_pw'),mode==='up'?'new-password':'current-password',mode==='up'?t('au_pw_ph'):'')}
+      <div class="au-note" id="auNote">${esc(mode==='up'?t('au_hint'):'')}</div>
+      <button class="btn wide press" type="submit" id="auGo">${esc(t(mode==='up'?'au_up_go':'au_in_go'))}</button>
+      ${mode==='in'?`<button type="button" class="lnk" data-act="au-to" data-mode="rec" style="justify-self:start">${esc(t('au_forgot'))}</button>`:''}</form>`;
+  if(mode==='rec') return `<h2>${esc(t('au_rec_t'))}</h2><p class="lede">${esc(t('au_rec_d'))}</p>
+    <form id="auForm" novalidate style="display:grid;gap:14px">${em}
+      <label class="field"><span>${esc(t('au_key'))}</span><input class="inp" id="auKey" autocapitalize="characters" autocomplete="off" spellcheck="false" placeholder="RND-XXXX-XXXX-XXXX" style="font-family:ui-monospace,Menlo,monospace;letter-spacing:.04em"></label>
+      ${pwField('auPw',t('au_newpw'),'new-password',t('au_pw_ph'))}
+      <div class="au-note" id="auNote"></div>
+      <button class="btn wide press" type="submit" id="auGo">${esc(t('au_rec_go'))}</button>
+      <button type="button" class="lnk" data-act="au-to" data-mode="in" style="justify-self:start">${esc(t('au_back'))}</button></form>`;
+  if(mode==='del') return `<h2>${esc(t('del_t'))}</h2><p class="lede">${esc(t('del_d'))}</p>
+    <form id="auForm" novalidate style="display:grid;gap:14px">${pwField('auPw',t('au_pw'),'current-password','')}
+      <div class="au-note" id="auNote"></div>
+      <button class="btn wide press" type="submit" id="auGo" style="background:#F87171;color:#2A0A0A">${esc(t('del_go'))}</button></form>`;
+  return '';
+}
+function shAuth(mode){
+  if(!acct.cloud){ toast(t('ae_noapi')); return; }
+  authMode=mode||'up';
+  openSheet(`<div id="auBox" style="display:grid;gap:16px">${authBody(authMode,'')}</div>`, r=>setTimeout(()=>{ const f=$('#auEmail',r)||$('#auPw',r); try{ f&&f.focus(); }catch(_){} },380));
+}
+function auSwitch(mode){ const em=$('#auEmail')?$('#auEmail').value:''; authMode=mode; const box=$('#auBox'); box.innerHTML=authBody(mode,em); syncSegs(box,true); box.classList.remove('flash'); reflow(box); box.classList.add('flash'); }
+function showKey(key){
+  const box=$('#auBox'); if(!box) return;
+  box.innerHTML=`<h2>${esc(t('key_t'))}</h2><p class="lede">${esc(t('key_d'))}</p>
+    <div class="keybox pop"><code id="rkey">${esc(key)}</code><button class="btn sm ghost press" data-act="key-copy">${ic('copy',16)}${esc(t('key_copy'))}</button></div>
+    <label class="consent-row"><input type="checkbox" id="keyOk"><span>${esc(t('key_saved'))}</span></label>
+    <button class="btn wide press" id="keyDone" data-act="key-done" disabled>${esc(t('key_done'))}</button>`;
+}
+function auNote(msg,err){ const n=$('#auNote'); if(!n) return; n.textContent=msg; n.classList.toggle('err',!!err); if(err){ n.classList.remove('bump'); reflow(n); n.classList.add('bump'); } }
+function auErr(c){ return t({email:'ae_email',short:'ae_short',used:'ae_used',wrong:'ae_wrong',wrongkey:'ae_wrongkey',many:'ae_many',net:'ae_net',nodb:'ae_noapi',noapi:'ae_noapi',auth:'ae_expired'}[c]||'ae_other'); }
+async function auSubmit(){
+  const go=$('#auGo'), mode=authMode, emEl=$('#auEmail'), email=emEl?emEl.value.trim():'', pw=$('#auPw').value;
+  if(mode!=='del'&&!EMAIL_RE.test(email)){ auNote(t('ae_email'),true); emEl.focus(); return; }
+  if(mode==='rec'&&!$('#auKey').value.trim()){ auNote(t('ae_nokey'),true); $('#auKey').focus(); return; }
+  if((mode==='up'||mode==='rec')&&pw.length<8){ auNote(t('ae_short'),true); $('#auPw').focus(); return; }
+  if(!pw){ auNote(t('ae_nopw'),true); $('#auPw').focus(); return; }
+  const label=go.textContent; go.disabled=true; go.textContent=t('au_wait');
+  try{
+    if(mode==='up'){ const nm=(($('#obName')&&$('#obName').value)||S.name||'').trim(); const j=await window.RoundsCloud.signUp(email,pw,nm); authMode='key'; showKey(j.recovery); window.__pendingSession=j; }
+    else if(mode==='in'){ await window.RoundsCloud.signIn(email,pw); closeSheet(); toast(t('au_ok_in')); }
+    else if(mode==='rec'){ await window.RoundsCloud.recover(email,$('#auKey').value.trim(),pw); closeSheet(); toast(t('au_ok_rec')); }
+    else if(mode==='del'){ await window.RoundsCloud.deleteAccount(pw); closeSheet(); toast(t('t_deleted')); }
+  }catch(err){ go.disabled=false; go.textContent=label; auNote(auErr(err&&err.code),true); }
+}
+
+connect(); cloudBoot();
 (function(){
   const sp=document.getElementById('splash'); if(!sp) return; let gone=false;
   function hide(){ if(gone) return; gone=true; sp.classList.add('leave'); if(S.onboarded){ renderView('swap'); if(!S.toured) setTimeout(startTour,reduced()?300:1600); } else renderOb(); setTimeout(()=>sp.remove(),520); }
