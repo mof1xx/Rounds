@@ -1,6 +1,6 @@
 /* Rounds service worker: the app works offline. Bump VERSION on every release. */
-const VERSION = 'rounds-v2.0.0';
-const SHELL = ['/app', '/manifest.webmanifest', '/favicon.svg', '/icon-192.png', '/icon-512.png', '/apple-touch-icon.png'];
+const VERSION = 'rounds-v3.0.0';
+const SHELL = ['/', '/manifest.webmanifest', '/favicon.svg', '/icon-192.png', '/icon-512.png', '/apple-touch-icon.png'];
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(VERSION).then(c => Promise.all(SHELL.map(u => c.add(u).catch(() => {})))).then(() => self.skipWaiting()));
 });
@@ -13,7 +13,7 @@ self.addEventListener('fetch', e => {
   if (req.mode === 'navigate') {
     const key = url.pathname.replace(/\.html$/, '') || '/';
     e.respondWith(fetch(req).then(r => { if (r.ok) { const c = r.clone(); caches.open(VERSION).then(x => x.put(key, c)); } return r; })
-      .catch(() => caches.match(key).then(hit => hit || caches.match('/app'))));
+      .catch(() => caches.match(key).then(hit => hit || caches.match('/'))));
     return;
   }
   e.respondWith(caches.match(req).then(hit => hit || fetch(req).then(r => {
