@@ -33,7 +33,7 @@ module.exports = async (req, res) => {
   let b = req.body;
   if (typeof b === 'string') { try { b = JSON.parse(b); } catch (_) { b = {}; } }
   b = b || {};
-  const ip = String(req.headers['x-forwarded-for'] || '').split(',')[0].trim() || 'unknown';
+  const ip = String(req.headers['x-rounds-client-ip'] && process.env.TRUST_PROXY_IP ? req.headers['x-rounds-client-ip'] : (req.headers['x-real-ip'] || req.headers['x-vercel-forwarded-for'] || req.headers['x-forwarded-for'] || '')).split(',')[0].trim().slice(0, 64) || 'unknown';
   try {
     switch (b.action) {
       case 'ping': return send(200, { ok: true });
@@ -50,6 +50,7 @@ module.exports = async (req, res) => {
       }
       case 'login': {
         const e = normEmail(b.email), p = String(b.password || '');
+        if (!validEmail(e) || p.length > 200) return send(401, { error: 'wrong' });
         if (await tooMany('li:' + e, 10, 900) || await tooMany('lip:' + ip, 60, 900)) return send(429, { error: 'many' });
         const raw = await R('GET', 'user:' + e);
         if (!raw) { await hash(p, 'x'); return send(401, { error: 'wrong' }); }
@@ -59,7 +60,8 @@ module.exports = async (req, res) => {
         return send(200, { token: await newSession(u.uid), uid: u.uid, email: e, name: u.name || '' });
       }
       case 'recover': {
-        const e = normEmail(b.email), k = String(b.recovery || '').trim().toUpperCase(), p = String(b.password || '');
+        const e = normEmail(b.email), k = String(b.recovery || '').trim().toUpperCase().slice(0, 40), p = String(b.password || '');
+        if (!validEmail(e)) return send(401, { error: 'wrongkey' });
         if (p.length < 8 || p.length > 200) return send(400, { error: 'short' });
         if (await tooMany('rc:' + e, 8, 3600) || await tooMany('rcip:' + ip, 40, 3600)) return send(429, { error: 'many' });
         const raw = await R('GET', 'user:' + e);
@@ -87,6 +89,8 @@ module.exports = async (req, res) => {
       }
       case 'logout': await R('DEL', 'sess:' + tok); await R('SREM', 'sessions:' + uid, tok); return send(200, { ok: true });
       case 'delete': {
+        if (String(b.password || '').length > 200) return send(401, { error: 'wrong' });
+        if (await tooMany('del:' + uid, 10, 3600)) return send(429, { error: 'many' });
         const e = normEmail(b.email), raw = await R('GET', 'user:' + e);
         if (!raw) return send(401, { error: 'wrong' });
         const u = JSON.parse(raw);

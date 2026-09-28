@@ -3,7 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
 <meta name="theme-color" content="#0E0E0F">
+<script>try{var th=localStorage.getItem("rounds:theme")||"auto";if(th==="auto")th=matchMedia("(prefers-color-scheme: light)").matches?"light":"dark";document.documentElement.setAttribute("data-theme",th);}catch(e){}</script>
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <title>Rounds: stop doing free revision rounds</title>
@@ -506,6 +508,44 @@ button.act-row:hover{ background:#1E1E21; }
 .thanks .circ path{ stroke-dasharray:30; stroke-dashoffset:30; animation:dash .45s var(--ease) .3s forwards; }
 .thanks b{ font-size:20px; } .thanks span{ color:#55555B; font-size:14px; }
 
+
+/* ── light theme ── */
+:root[data-theme="light"]{
+  --bg:#F5F5F2; --c1:#FFFFFF; --c2:#EFEFEB; --c3:#E3E3DE; --line:#E3E3DF; --tx:#111113; --mu:#5B5B62; --dim:#8C8C93;
+  --btn:#111113; --on-btn:#FFFFFF; --green:#16A34A; --green-bg:#DDF5E5; --green-tx:#15803D; --amber:#D9660F; --amber-bg:#FDEBD8;
+  color-scheme:light;
+}
+:root[data-theme="light"] .tile{ background:var(--tf)!important; color:var(--tb)!important; }
+:root[data-theme="light"] .tabbar{ background:rgba(255,255,255,.86); border-color:rgba(0,0,0,.07); box-shadow:0 8px 30px rgba(0,0,0,.08); }
+:root[data-theme="light"] .tabbar .thumb{ background:rgba(0,0,0,.06); }
+:root[data-theme="light"] .side{ background:#FBFBF9; }
+:root[data-theme="light"] .inp:focus{ border-color:#B9B9BF; background:#fff; }
+:root[data-theme="light"] .seg .thumb{ background:#fff; box-shadow:0 1px 3px rgba(0,0,0,.14); }
+:root[data-theme="light"] .toast .ic{ color:#4ADE80; }
+:root[data-theme="light"] .fc{ box-shadow:0 18px 40px rgba(0,0,0,.10); }
+:root[data-theme="light"] .cta p{ color:#A1A1A8; }
+:root[data-theme="light"] .cta::after, :root[data-theme="light"] .sum.shine::after{ background:linear-gradient(90deg,transparent,rgba(255,255,255,.18),transparent); }
+:root[data-theme="light"] .pcard:hover, :root[data-theme="light"] .act:hover, :root[data-theme="light"] button.act-row:hover, :root[data-theme="light"] .mcard:hover{ background:#F2F2EE; }
+:root[data-theme="light"] .mcard.on{ background:#EAEAE5; box-shadow:inset 0 0 0 1px rgba(0,0,0,.06); }
+:root[data-theme="light"] .composer:focus-within{ box-shadow:0 0 0 1.5px #C4C4C9; }
+:root[data-theme="light"] .item.is-ok{ box-shadow:inset 0 0 0 1px #B7E4C6; }
+:root[data-theme="light"] .sum .label, :root[data-theme="light"] .estbar .t small{ color:#A1A1A8; }
+:root[data-theme="light"] .sum .lines{ color:#C9C9CE; }
+:root[data-theme="light"] .estbar{ box-shadow:0 14px 34px rgba(0,0,0,.18); }
+:root[data-theme="light"] .qbtn .qi{ background:rgba(0,0,0,.05); }
+:root[data-theme="light"] .qbtn.pri .qi{ background:rgba(255,255,255,.14); }
+:root[data-theme="light"] .spot{ box-shadow:0 0 0 9999px rgba(20,20,22,.5), 0 0 0 2px rgba(255,255,255,.95); }
+:root[data-theme="light"] .tip{ box-shadow:0 24px 60px rgba(0,0,0,.25); }
+:root[data-theme="light"] .tip .n, :root[data-theme="light"] .tip .lnk{ color:#A1A1A8; text-decoration-color:#46464B; }
+:root[data-theme="light"] .tip .n i{ background:#3A3A40; }
+:root[data-theme="light"] .tip .n i.on{ background:#fff; }
+:root[data-theme="light"] .tip p{ color:#D4D4D8; }
+:root[data-theme="light"] .tip .btn{ background:#fff; color:#111; }
+:root[data-theme="light"] .consent-row input{ accent-color:#111; }
+:root[data-theme="light"] .au-note.err{ color:#DC2626; }
+:root[data-theme="light"] .scrim{ background:rgba(0,0,0,.32); }
+:root[data-theme="light"] .portal{ border:1px solid var(--line); }
+:root[data-theme="light"] .btn.done{ color:#fff; }
 </style>
 </head>
 <body>
@@ -544,12 +584,14 @@ function wide(){ try{ return !!(window.matchMedia&&window.matchMedia('(min-width
 function reflow(el){ return el && el.offsetWidth; }
 function bump(el){ if(!el) return; el.classList.remove('bump'); reflow(el); el.classList.add('bump'); }
 const LOC={en:'en-GB',ru:'ru-RU',de:'de-DE'};
+const LANGS=[['en','English'],['de','Deutsch'],['ru','Русский']];
+const hU=()=>({ru:'ч',de:'Std.'}[S.lang]||'h');
 function pl(n,a,b,c){ n=Math.abs(n)%100; const d=n%10; if(n>10&&n<20) return c; if(d>1&&d<5) return b; if(d===1) return a; return c; }
 
 /* ================= state ================= */
 const KEY='rounds:v5';
 function ch(en,ru,mins,kind,extra,reason){ return {id:uid(),text:{en:en,ru:ru},mins:mins,sugM:mins,kind:kind,extra:!!extra,reason:reason||'included',approved:false}; }
-function detectLang(){ try{ const l=localStorage.getItem('rounds:lang'); if(l==='ru'||l==='en') return l; }catch(e){} return /^ru/i.test(navigator.language||'')?'ru':'en'; }
+function detectLang(){ try{ const l=localStorage.getItem('rounds:lang'); if(l==='ru'||l==='en'||l==='de') return l; }catch(e){} const nl=navigator.language||''; return /^ru/i.test(nl)?'ru':/^de/i.test(nl)?'de':'en'; }
 function seed(lang,demo){
   if(!demo){ lang=lang||detectLang(); return {v:4, lang:lang, name:'', cur:'EUR', rate:6000, onboarded:false, route:'home', pid:null, from:'home', msgLang:lang, projects:[], ledger:[], estimates:[], feed:[], draft:{client:'',rate:null,items:[]}}; }
   const n=Date.now(), d=x=>n-x*DAY;
@@ -582,7 +624,7 @@ function seed(lang,demo){
     feed:[{at:d(2),type:'agreed',p:{c:'Lena',sum:24000}},{at:d(5),type:'estimate',p:{c:'Tom',sum:9000}}],
     draft:{client:'',rate:null,items:[]}};
 }
-function load(){ try{ const r=localStorage.getItem(KEY); if(r){ const o=JSON.parse(r); if(o&&o.v===4&&o.projects) return o; } }catch(e){} return null; }
+function load(){ try{ const r=localStorage.getItem(KEY); if(r){ const o=JSON.parse(r); if(o&&o.v===4&&o.projects){ if(!['EUR','USD','GBP'].includes(o.cur)) o.cur='EUR'; return o; } } }catch(e){} return null; }
 function save(){ S.updated=Date.now(); try{ localStorage.setItem(KEY,JSON.stringify(S)); }catch(e){} if(typeof schedulePush==='function') schedulePush(); }
 let S=load()||seed();
 try{ localStorage.setItem('rounds:lang',S.lang); }catch(e){}
@@ -605,7 +647,7 @@ en:{
   sy_on:'Synced across your devices', sy_on_d:v=>`Projects, estimates and settings are saved to your account. Last sync ${v.when}.`, sy_ing:'Syncing…', sy_err:'Sync paused', sy_err_d:'Changes are kept on this device and will sync when the connection is back.',
   sy_conn:'Connecting…', sy_conn_d:'Checking your account.', sy_off:'Saved on this device', sy_off_d:'Your projects and estimates are stored on this device and work offline. Sync across devices comes with Rounds accounts.',
   au_rec_t:'Reset your password', au_rec_d:'Enter your email, the recovery key you saved when creating the account, and a new password.', au_key:'Recovery key', au_newpw:'New password', au_rec_go:'Set new password', au_back:'Back to sign in', au_ok_rec:'Password changed. You are signed in.', key_t:'Save your recovery key', key_d:'If you ever forget your password, this key is the only way back into your account. Take a screenshot or keep it in your notes.', key_copy:'Copy', key_saved:'I saved my recovery key', key_done:'Done', del_t:'Delete account', del_d:'This deletes your account and everything synced to it. Projects on this device stay. Enter your password to confirm.', del_go:'Delete my account', t_deleted:'Account deleted', ae_wrongkey:'Wrong email or recovery key.', ae_nokey:'Please enter your recovery key.', ae_noapi:'Accounts are not set up yet.', ae_expired:'Please sign in again.',
-  l_priv:'Privacy policy', au_open:'Create an account', au_have:'I already have an account', au_up_t:'Create your account', au_in_t:'Welcome back', au_d:'Keep your projects on all your devices. Use the same email and password everywhere.', au_up:'New account', au_in:'Sign in', au_pw:'Password', au_pw_ph:'At least 8 characters', au_show:'Show password', au_hint:'Use at least 8 characters. Mixing letters and numbers makes it stronger.', au_up_go:'Create account', au_in_go:'Sign in', au_wait:'One moment…', au_forgot:'Forgot password?', au_sent:v=>`We sent a reset link to ${v.e}. Check your inbox and spam folder.`, au_ok_up:'Account created. Your projects now sync.', au_ok_in:'Signed in. Your projects are syncing.', ae_email:'Please enter a valid email.', ae_short:'The password needs at least 8 characters.', ae_nopw:'Please enter your password.', ae_used:'There is already an account with this email. Switch to Sign in.', ae_weak:'This password is too weak. Try a longer one.', ae_wrong:'Wrong email or password.', ae_many:'Too many attempts. Please wait a few minutes.', ae_net:'No connection. Check the internet and try again.', ae_off:'Sign-in with email is turned off in Firebase.', ae_other:'Something went wrong. Please try again.',
+  au_open:'Create an account', au_have:'I already have an account', au_up_t:'Create your account', au_in_t:'Welcome back', au_d:'Keep your projects on all your devices. Use the same email and password everywhere.', au_up:'New account', au_in:'Sign in', au_pw:'Password', au_pw_ph:'At least 8 characters', au_show:'Show password', au_hint:'Use at least 8 characters. Mixing letters and numbers makes it stronger.', au_up_go:'Create account', au_in_go:'Sign in', au_wait:'One moment…', au_forgot:'Forgot password?', au_sent:v=>`We sent a reset link to ${v.e}. Check your inbox and spam folder.`, au_ok_up:'Account created. Your projects now sync.', au_ok_in:'Signed in. Your projects are syncing.', ae_email:'Please enter a valid email.', ae_short:'The password needs at least 8 characters.', ae_nopw:'Please enter your password.', ae_used:'There is already an account with this email. Switch to Sign in.', ae_weak:'This password is too weak. Try a longer one.', ae_wrong:'Wrong email or password.', ae_many:'Too many attempts. Please wait a few minutes.', ae_net:'No connection. Check the internet and try again.', ae_off:'Sign-in with email is turned off in Firebase.', ae_other:'Something went wrong. Please try again.',
   g_btn:'Continue with Google', g_or:'or set up without an account', g_as:v=>`Signed in as ${v.e}`, g_ok:'Signed in. Your projects now sync.', g_out:'Sign out', g_bye:'Signed out. Your data stays on this device.', g_err:'Could not sign in. Please try again.', g_blocked:'Sign-in window was blocked. Open Rounds in Safari or Chrome and try again.', g_na:'Sign-in is not available yet.', sy_login_d:'Create an account to keep your projects on all your devices.',
   sy_short_on:'Synced', sy_short_off:'This device', just_now:'just now',
   menu_open:'Open menu', m_pages:'Go to', m_quick:'Quick actions', q_est:'New estimate', q_fb:'Add feedback', q_np:'New project', m_proj:'Your projects', m_prefs:'Language and currency', m_help:'Help',
@@ -652,7 +694,7 @@ en:{
   rp_t:'Reply to client', rp_d:'Paid changes come with time and price. Free ones are listed as included.',
   cl_t:v=>`What ${v.c} sees`, cl_d:'A link, no sign-up. The client ticks the extras and confirms with their name.', cl_hi:v=>`Hi ${v.c}, these changes go beyond our agreement:`, cl_name:'Type your name to confirm', cl_ok:v=>`Approve ${v.sum}`, cl_total:'Total', cl_none:'Nothing is waiting for approval right now.', cl_thx:'Approved. Thank you!', cl_note:v=>`Saved with name and time: ${v.name}, ${v.time}`, close:'Close', done:'Done',
   ag_t:'Agreement', f_fee:'Fixed fee', f_incl:'Rounds included', f_deliv:'Deliverables, comma separated', ph_deliv:'Logo, Menu A4', save:'Save', t_ag:'Agreement updated',
-  np_t:'New project', f_pname:'Project name', ph_pname:'e.g. Bakery rebrand', create:'Create project', t_np:'Project created',
+  np_t:'New project', f_pname:'Project name', ph_pname:'e.g. Bakery rebrand', create:'Create project', plan_t:'Free plan', plan_use:v=>`${v.n} of ${v.m} projects`, plan_pro:'Pro is coming soon: unlimited projects, a client approval link and a change log for invoices. The first 100 get it free for a year.', lim_t:'You have 10 projects', lim_d:'The free plan holds up to 10 projects. Delete a finished one to make room. Pro with unlimited projects is coming soon.', lim_more:'About Pro', lim_ok:'Got it', soon:'Soon', t_np:'Project created',
   set_t:'Settings', f_name:'Your name', ph_name:'e.g. Alex', f_lang:'Language', f_cur:'Currency', replay:'Replay intro', wipe:'Delete all data', wipe_q:'Delete all projects, estimates and history on this device? This cannot be undone.', t_reset:'All data deleted', demo:'Load demo data', t_demo:'Demo data loaded', empty_t:'Your first project starts here', empty_d:'Add a client and your agreement: fee, included rounds and hourly rate. Rounds will count everything else.', empty_btn:'Create a project', empty_try:'or estimate a few changes first', t_saved:'Saved',
   skip:'Skip', next:'Continue', start:'Open my dashboard',
   ob1_t:'Every round, counted.', ob1_d:'Feedback comes from email, WhatsApp and calls. Rounds keeps track of what the agreement covers and what it doesn’t.',
@@ -664,7 +706,7 @@ en:{
   v_msg:'Hi Jonas,\nThanks for the notes! Here’s what the changes will take…\nTotal: 3 h 35 min, €215', v_ok:'Jonas approved',
   ev_created:()=>'Project created', ev_feedback:v=>`Round ${v.n}: ${v.k} ${v.k===1?'change':'changes'} from the client`, ev_delivered:v=>`Round ${v.n} delivered`, ev_approved:v=>`${v.c} approved ${money(v.sum)} of extra work`, ev_estimate:v=>`Estimate sent to ${v.c}: ${money(v.sum)}`, ev_agreed:v=>`${v.c} agreed to ${money(v.sum)}`, ev_agreement:()=>'Agreement updated',
   log_head:v=>`Change log: ${v.p} (${v.c})`, log_extra:'extra', log_incl:'included', log_ok:'approved',
-  anon:'Anonymous'
+  anon:'Anonymous', f_theme:'Theme', th_sys:'System', th_light:'Light', th_dark:'Dark', m_prefs:'Language, currency, theme'
 },
 ru:{
   nav_act:'События', nav_acc:'Аккаунт', pg_act_d:'Всё, что происходило, по дням', pg_acc_d:'Профиль, синхронизация, язык', pg_help_d:'Короткий тур по приложению',
@@ -673,7 +715,7 @@ ru:{
   sy_on:'Синхронизировано между устройствами', sy_on_d:v=>`Проекты, оценки и настройки сохранены в аккаунте. Последняя синхронизация ${v.when}.`, sy_ing:'Синхронизация…', sy_err:'Синхронизация на паузе', sy_err_d:'Изменения сохранены на этом устройстве и синхронизируются, когда связь вернётся.',
   sy_conn:'Подключение…', sy_conn_d:'Проверяем аккаунт.', sy_off:'Сохранено на этом устройстве', sy_off_d:'Проекты и оценки хранятся на этом устройстве и работают без интернета. Синхронизация между устройствами появится вместе с аккаунтами Rounds.',
   au_rec_t:'Сброс пароля', au_rec_d:'Введите почту, ключ восстановления, который вы сохранили при создании аккаунта, и новый пароль.', au_key:'Ключ восстановления', au_newpw:'Новый пароль', au_rec_go:'Сохранить новый пароль', au_back:'Назад ко входу', au_ok_rec:'Пароль изменён. Вы вошли.', key_t:'Сохраните ключ восстановления', key_d:'Если забудете пароль, этот ключ — единственный способ вернуться в аккаунт. Сделайте скриншот или сохраните в заметки.', key_copy:'Скопировать', key_saved:'Я сохранил(а) ключ', key_done:'Готово', del_t:'Удалить аккаунт', del_d:'Аккаунт и всё, что в нём синхронизировано, будут удалены. Проекты на этом устройстве останутся. Введите пароль для подтверждения.', del_go:'Удалить мой аккаунт', t_deleted:'Аккаунт удалён', ae_wrongkey:'Неверная почта или ключ восстановления.', ae_nokey:'Введите ключ восстановления.', ae_noapi:'Аккаунты ещё не настроены.', ae_expired:'Войдите в аккаунт снова.',
-  l_priv:'Конфиденциальность', au_open:'Создать аккаунт', au_have:'У меня уже есть аккаунт', au_up_t:'Создайте аккаунт', au_in_t:'С возвращением', au_d:'Проекты будут на всех ваших устройствах. Входите везде с одной почтой и паролем.', au_up:'Новый аккаунт', au_in:'Вход', au_pw:'Пароль', au_pw_ph:'Не меньше 8 символов', au_show:'Показать пароль', au_hint:'Не меньше 8 символов. Буквы вместе с цифрами делают пароль надёжнее.', au_up_go:'Создать аккаунт', au_in_go:'Войти', au_wait:'Секунду…', au_forgot:'Забыли пароль?', au_sent:v=>`Мы отправили ссылку для сброса пароля на ${v.e}. Проверьте входящие и спам.`, au_ok_up:'Аккаунт создан. Проекты теперь синхронизируются.', au_ok_in:'Вы вошли. Проекты синхронизируются.', ae_email:'Введите корректный email.', ae_short:'Пароль должен быть не короче 8 символов.', ae_nopw:'Введите пароль.', ae_used:'Аккаунт с этой почтой уже есть. Переключитесь на «Вход».', ae_weak:'Слишком простой пароль. Попробуйте длиннее.', ae_wrong:'Неверная почта или пароль.', ae_many:'Слишком много попыток. Подождите несколько минут.', ae_net:'Нет соединения. Проверьте интернет и попробуйте снова.', ae_off:'Вход по почте выключен в Firebase.', ae_other:'Что-то пошло не так. Попробуйте ещё раз.',
+  au_open:'Создать аккаунт', au_have:'У меня уже есть аккаунт', au_up_t:'Создайте аккаунт', au_in_t:'С возвращением', au_d:'Проекты будут на всех ваших устройствах. Входите везде с одной почтой и паролем.', au_up:'Новый аккаунт', au_in:'Вход', au_pw:'Пароль', au_pw_ph:'Не меньше 8 символов', au_show:'Показать пароль', au_hint:'Не меньше 8 символов. Буквы вместе с цифрами делают пароль надёжнее.', au_up_go:'Создать аккаунт', au_in_go:'Войти', au_wait:'Секунду…', au_forgot:'Забыли пароль?', au_sent:v=>`Мы отправили ссылку для сброса пароля на ${v.e}. Проверьте входящие и спам.`, au_ok_up:'Аккаунт создан. Проекты теперь синхронизируются.', au_ok_in:'Вы вошли. Проекты синхронизируются.', ae_email:'Введите корректный email.', ae_short:'Пароль должен быть не короче 8 символов.', ae_nopw:'Введите пароль.', ae_used:'Аккаунт с этой почтой уже есть. Переключитесь на «Вход».', ae_weak:'Слишком простой пароль. Попробуйте длиннее.', ae_wrong:'Неверная почта или пароль.', ae_many:'Слишком много попыток. Подождите несколько минут.', ae_net:'Нет соединения. Проверьте интернет и попробуйте снова.', ae_off:'Вход по почте выключен в Firebase.', ae_other:'Что-то пошло не так. Попробуйте ещё раз.',
   g_btn:'Войти через Google', g_or:'или настроить без аккаунта', g_as:v=>`Вы вошли как ${v.e}`, g_ok:'Вы вошли. Проекты теперь синхронизируются.', g_out:'Выйти из аккаунта', g_bye:'Вы вышли. Данные остались на этом устройстве.', g_err:'Не удалось войти. Попробуйте ещё раз.', g_blocked:'Окно входа заблокировано. Откройте Rounds в Safari или Chrome и попробуйте снова.', g_na:'Вход пока недоступен.', sy_login_d:'Создайте аккаунт, чтобы проекты были на всех ваших устройствах.',
   sy_short_on:'Синхронизировано', sy_short_off:'Это устройство', just_now:'только что',
   menu_open:'Открыть меню', m_pages:'Перейти', m_quick:'Быстрые действия', q_est:'Новая оценка', q_fb:'Добавить правки', q_np:'Новый проект', m_proj:'Ваши проекты', m_prefs:'Язык и валюта', m_help:'Помощь',
@@ -720,7 +762,7 @@ ru:{
   rp_t:'Ответ клиенту', rp_d:'Платные правки идут со временем и ценой, бесплатные перечислены как включённые.',
   cl_t:v=>`Что видит ${v.c}`, cl_d:'Ссылка без регистрации. Клиент отмечает доп. правки и подтверждает своим именем.', cl_hi:v=>`${v.c}, эти правки выходят за рамки договора:`, cl_name:'Введите имя для подтверждения', cl_ok:v=>`Подтвердить ${v.sum}`, cl_total:'Итого', cl_none:'Сейчас нечего подтверждать.', cl_thx:'Подтверждено. Спасибо!', cl_note:v=>`Сохранено с именем и временем: ${v.name}, ${v.time}`, close:'Закрыть', done:'Готово',
   ag_t:'Договорённость', f_fee:'Фиксированная сумма', f_incl:'Включено раундов', f_deliv:'Что сдаём, через запятую', ph_deliv:'Логотип, Меню A4', save:'Сохранить', t_ag:'Договорённость обновлена',
-  np_t:'Новый проект', f_pname:'Название проекта', ph_pname:'например, Ребрендинг пекарни', create:'Создать проект', t_np:'Проект создан',
+  np_t:'Новый проект', f_pname:'Название проекта', ph_pname:'например, Ребрендинг пекарни', create:'Создать проект', plan_t:'Бесплатный тариф', plan_use:v=>`${v.n} из ${v.m} проектов`, plan_pro:'Скоро Pro: проекты без ограничений, ссылка для подтверждения клиентом и история изменений для счёта. Первым 100 — год бесплатно.', lim_t:'У вас уже 10 проектов', lim_d:'В бесплатном тарифе до 10 проектов. Удалите завершённый, чтобы освободить место. Pro без ограничений скоро появится.', lim_more:'Подробнее о Pro', lim_ok:'Понятно', soon:'Скоро', t_np:'Проект создан',
   set_t:'Настройки', f_name:'Ваше имя', ph_name:'например, Алекс', f_lang:'Язык', f_cur:'Валюта', replay:'Показать интро снова', wipe:'Удалить все данные', wipe_q:'Удалить все проекты, оценки и историю на этом устройстве? Отменить будет нельзя.', t_reset:'Все данные удалены', demo:'Загрузить демо-данные', t_demo:'Демо-данные загружены', empty_t:'Здесь начнётся ваш первый проект', empty_d:'Добавьте клиента и договорённость: сумму, число раундов и ставку. Остальное Rounds посчитает сам.', empty_btn:'Создать проект', empty_try:'или сначала оцените пару правок', t_saved:'Сохранено',
   skip:'Пропустить', next:'Далее', start:'Открыть мой дашборд',
   ob1_t:'Каждый раунд на счету.', ob1_d:'Правки приходят из почты, WhatsApp и звонков. Rounds помнит, что входит в договор, а что нет.',
@@ -732,7 +774,75 @@ ru:{
   v_msg:'Здравствуйте, Йонас!\nСпасибо за правки! Вот сколько они займут…\nИтого: 3 ч 35 мин, 215 €', v_ok:'Йонас подтвердил',
   ev_created:()=>'Проект создан', ev_feedback:v=>`Раунд ${v.n}: ${v.k} ${pl(v.k,'правка','правки','правок')} от клиента`, ev_delivered:v=>`Раунд ${v.n} сдан`, ev_approved:v=>`${v.c} подтвердил(а) доп. работу на ${money(v.sum)}`, ev_estimate:v=>`Оценка для ${v.c}: ${money(v.sum)}`, ev_agreed:v=>`${v.c} согласен(на) на ${money(v.sum)}`, ev_agreement:()=>'Договорённость обновлена',
   log_head:v=>`История изменений: ${v.p} (${v.c})`, log_extra:'доп.', log_incl:'включено', log_ok:'подтверждено',
-  anon:'Без имени'
+  anon:'Без имени', f_theme:'Тема', th_sys:'Как в системе', th_light:'Светлая', th_dark:'Тёмная', m_prefs:'Язык, валюта, тема'
+},
+de:{
+  nav_act:'Aktivität', nav_acc:'Konto', pg_act_d:'Alles, was passiert ist, nach Tagen', pg_acc_d:'Profil, Sync, Sprache', pg_help_d:'Eine kurze Tour durch die App',
+  act_d:'Feedback, Lieferungen und Freigaben aus allen Projekten.', f_all:'Alle', f_money:'Geld', f_work:'Runden', act_empty:'Hier ist noch nichts.', today:'Heute', yesterday:'Gestern',
+  acc_d:'Dein Profil und deine Einstellungen.', acc_help:'Hilfe', acc_prefs:'Einstellungen', acc_claude:'Angemeldet', acc_local_short:'Profil auf diesem Gerät',
+  sy_on:'Auf deinen Geräten synchronisiert', sy_on_d:v=>`Projekte, Schätzungen und Einstellungen sind in deinem Konto gespeichert. Letzter Sync ${v.when}.`, sy_ing:'Synchronisiere…', sy_err:'Sync pausiert', sy_err_d:'Änderungen bleiben auf diesem Gerät und werden synchronisiert, sobald die Verbindung wieder da ist.',
+  sy_conn:'Verbinde…', sy_conn_d:'Dein Konto wird geprüft.', sy_off:'Auf diesem Gerät gespeichert', sy_off_d:'Deine Projekte und Schätzungen liegen auf diesem Gerät und funktionieren offline. Mit einem Rounds-Konto synchronisierst du sie zwischen Geräten.',
+  au_rec_t:'Passwort zurücksetzen', au_rec_d:'Gib deine E-Mail, den Wiederherstellungsschlüssel aus der Kontoerstellung und ein neues Passwort ein.', au_key:'Wiederherstellungsschlüssel', au_newpw:'Neues Passwort', au_rec_go:'Neues Passwort festlegen', au_back:'Zurück zur Anmeldung', au_ok_rec:'Passwort geändert. Du bist angemeldet.', key_t:'Speichere deinen Wiederherstellungsschlüssel', key_d:'Falls du dein Passwort vergisst, ist dieser Schlüssel der einzige Weg zurück in dein Konto. Mach einen Screenshot oder speichere ihn in deinen Notizen.', key_copy:'Kopieren', key_saved:'Ich habe den Schlüssel gespeichert', key_done:'Fertig', del_t:'Konto löschen', del_d:'Dein Konto und alles, was damit synchronisiert ist, wird gelöscht. Projekte auf diesem Gerät bleiben erhalten. Bestätige mit deinem Passwort.', del_go:'Mein Konto löschen', t_deleted:'Konto gelöscht', ae_wrongkey:'E-Mail oder Wiederherstellungsschlüssel falsch.', ae_nokey:'Bitte gib deinen Wiederherstellungsschlüssel ein.', ae_noapi:'Konten sind noch nicht eingerichtet.', ae_expired:'Bitte melde dich erneut an.',
+  au_open:'Konto erstellen', au_have:'Ich habe schon ein Konto', au_up_t:'Konto erstellen', au_in_t:'Willkommen zurück', au_d:'Behalte deine Projekte auf allen Geräten. Nutze überall dieselbe E-Mail und dasselbe Passwort.', au_up:'Neues Konto', au_in:'Anmelden', au_pw:'Passwort', au_pw_ph:'Mindestens 8 Zeichen', au_show:'Passwort anzeigen', au_hint:'Mindestens 8 Zeichen. Buchstaben und Zahlen gemischt machen es sicherer.', au_up_go:'Konto erstellen', au_in_go:'Anmelden', au_wait:'Einen Moment…', au_forgot:'Passwort vergessen?', au_sent:v=>`Wir haben einen Link an ${v.e} geschickt. Schau auch im Spam-Ordner nach.`, au_ok_up:'Konto erstellt. Deine Projekte werden jetzt synchronisiert.', au_ok_in:'Angemeldet. Deine Projekte werden synchronisiert.', ae_email:'Bitte gib eine gültige E-Mail ein.', ae_short:'Das Passwort braucht mindestens 8 Zeichen.', ae_nopw:'Bitte gib dein Passwort ein.', ae_used:'Mit dieser E-Mail gibt es schon ein Konto. Wechsle zu „Anmelden“.', ae_weak:'Dieses Passwort ist zu schwach. Versuch ein längeres.', ae_wrong:'E-Mail oder Passwort falsch.', ae_many:'Zu viele Versuche. Bitte warte ein paar Minuten.', ae_net:'Keine Verbindung. Prüfe das Internet und versuch es erneut.', ae_off:'Die Anmeldung per E-Mail ist ausgeschaltet.', ae_other:'Etwas ist schiefgelaufen. Bitte versuch es erneut.',
+  g_btn:'Weiter mit Google', g_or:'oder ohne Konto einrichten', g_as:v=>`Angemeldet als ${v.e}`, g_ok:'Angemeldet. Deine Projekte werden jetzt synchronisiert.', g_out:'Abmelden', g_bye:'Abgemeldet. Deine Daten bleiben auf diesem Gerät.', g_err:'Anmeldung fehlgeschlagen. Bitte versuch es erneut.', g_blocked:'Das Anmeldefenster wurde blockiert. Öffne Rounds in Safari oder Chrome und versuch es erneut.', g_na:'Die Anmeldung ist noch nicht verfügbar.', sy_login_d:'Erstelle ein Konto, um deine Projekte auf allen Geräten zu haben.',
+  sy_short_on:'Synchronisiert', sy_short_off:'Dieses Gerät', just_now:'gerade eben',
+  menu_open:'Menü öffnen', m_pages:'Gehe zu', m_quick:'Schnellaktionen', q_est:'Neue Schätzung', q_fb:'Feedback hinzufügen', q_np:'Neues Projekt', m_proj:'Deine Projekte', m_prefs:'Sprache, Währung, Design', m_help:'Hilfe',
+  pg_home_d:'Begrüßung, Einnahmen und was ansteht', pg_est_d:'Änderungen bepreisen und Nachricht kopieren', pg_proj_d:v=>`${v.n} ${v.n===1?'Projekt':'Projekte'}, ${v.a} sammeln Feedback`, pg_set_d:'Name, Stundensatz, Währung',
+  msg_empty:'Die Nachricht erscheint hier, sobald du eine Änderung hinzufügst.', tour_start:'So funktioniert Rounds', tour_n:v=>`${v.i} von ${v.n}`, tour_next:'Weiter', tour_done:'Verstanden',
+  tour1_t:'Hier geht’s los', tour1_d:'Der Kunde hat neue Änderungen geschickt? Tippe hier, gib sie ein und bekomme in Sekunden einen Preis.',
+  tour2_t:'Deine Zusatzeinnahmen', tour2_d:'Jedes freigegebene Extra landet hier. Der grüne Balken ist diese Woche.',
+  tour3_t:'Projekte, die dich brauchen', tour3_d:'Streifen sind Runden: weiße sind inklusive, orange gehen über die Vereinbarung hinaus. Tippe zum Öffnen.',
+  tour4_t:'Änderungen eingeben oder einfügen', tour4_d:'Eine Änderung pro Zeile. Rounds schlägt die Stunden vor, du passt sie mit − und + an.',
+  tour5_t:'Preis und Nachricht', tour5_d:'Die Summe aktualisiert sich laufend. Darunter steht eine fertige Nachricht für den Kunden: kopieren und senden.',
+  tour6_t:'Alles andere ist im Menü', tour6_d:'Alle Seiten, deine Aktivität und dein Konto mit Sprache und Sync. Tippe jederzeit auf die drei Striche.',
+  nav_home:'Start', nav_est:'Schätzung', nav_proj:'Projekte', settings:'Einstellungen', you:'Dein Profil',
+  greet_morning:'Guten Morgen', greet_afternoon:'Guten Tag', greet_evening:'Guten Abend', greet_night:'Noch spät dran',
+  sub_wait:v=>`${money(v.sum)} warten auf Freigabe in ${v.n} ${v.n===1?'Projekt':'Projekten'}. Alles andere läuft.`,
+  sub_clear:'Nichts wartet auf Kunden. Ein guter Moment, neue Versionen zu schicken.',
+  cta_t:'Neue Änderungen schätzen', cta_d:'Gib ein, was der Kunde möchte. Du bekommst Stunden, einen Preis und eine fertige Nachricht.',
+  earned:'Zusätzlich verdient diesen Monat', vs:v=>`${v.p>=0?'+':''}${v.p}% im Vergleich zu ${v.m}`, first:'Dein erster Monat mit bezahlten Extras',
+  st_active:'Aktive Projekte', st_wait:'Warten auf Freigabe', st_est:'Schätzungen diesen Monat',
+  needs:'Braucht dich', others:'Alles andere', activity:'Letzte Aktivität', all_proj:'Alle Projekte',
+  round_of:v=>`Runde ${v.n} von ${v.i} inklusive`, round_n:v=>`Runde ${v.n}`, pj_empty:'In dieser Runde gibt es noch keine Änderungen. Füge das Feedback des Kunden hinzu.', to_ok:'zur Freigabe', clear:'Alles erledigt',
+  est_t:'Änderungen schätzen', est_d:'Schreib jede Änderung in eine eigene Zeile. Rounds schlägt die Zeit vor, du entscheidest.',
+  f_client:'Kunde', ph_client:'z. B. Jonas', f_rate:'Stundensatz',
+  ph_change:'z. B. Logo etwas größer machen', add:'Änderung hinzufügen', paste_hint:'Tipp: Füge eine ganze Kundennachricht ein, jede Zeile wird zu einer Änderung.',
+  examples:'Beispiel ausprobieren', ex:['Logo etwas größer machen','Hintergrund in einer wärmeren Farbe','Visitenkarte mit dem neuen Logo hinzufügen','Zweite Seite komplett neu gestalten'],
+  empty:'Noch nichts zu bepreisen. Füge oben die erste Änderung hinzu.',
+  sug:v=>`Vorschlag ${dur(v.m)}`, reset:'Vorschlag übernehmen', paid:'Bezahlt', free:'Gratis', remove:'Entfernen',
+  k_general:'Allgemeine Änderung', k_text:'Textänderung', k_size:'Größe', k_color:'Farbe', k_position:'Abstand oder Position', k_type:'Typografie', k_image:'Bildtausch', k_layout:'Layout', k_rework:'Überarbeitung', k_craft:'Illustration oder Animation', k_new:'Neues Element',
+  pays:'Kunde zahlt', work:v=>`${dur(v.m)} bezahlte Arbeit in ${v.n} ${v.n===1?'Änderung':'Änderungen'}`, free_n:v=>`${v.n} ${v.n===1?'Änderung ist':'Änderungen sind'} wie vereinbart gratis`, ready:v=>`Fertig in etwa ${v.d} ${v.d===1?'Arbeitstag':'Arbeitstagen'}`, nothing_paid:'Noch keine bezahlten Änderungen',
+  msg_t:'Nachricht an deinen Kunden', copy:'Nachricht kopieren', copied:'Kopiert', save_est:'Speichern', clear_all:'Alles löschen',
+  saved:'Schätzung gespeichert', hist:'Gespeicherte Schätzungen', agreed:'Zugestimmt', sent:'Gesendet', mark_agreed:'Kunde hat zugestimmt', added_earn:'Zu den Einnahmen dieses Monats hinzugefügt', no_name:'Kein Kundenname',
+  t_copied:'Nachricht kopiert. Füge sie beim Kunden ein.', mob_total:'Kunde zahlt',
+  proj_t:'Projekte', proj_d:'Jede Vereinbarung, jede Runde an einem Ort.', new_proj:'Neues Projekt',
+  back:'Zurück', edit:'Bearbeiten', agreement:v=>`${money(v.fee)} pauschal, ${v.i} ${v.i===1?'Runde':'Runden'} inklusive, ${money(v.rate)}/Std.`,
+  of_incl:v=>`von ${v.i} inklusive`, wait_ok:'wartet auf Freigabe', approved_s:'freigegeben',
+  cur_changes:v=>`Änderungen in Runde ${v.n}`, st_collect:'Sammelt Feedback', st_deliv:'Neue Version gesendet',
+  r_round_limit:v=>`Runde ${v.n} liegt über den ${v.i} inklusiven`, r_new_deliverable:'Nicht in der Vereinbarung', r_included:'In der Vereinbarung enthalten', r_manual:'Von dir festgelegt',
+  approved:'Freigegeben',
+  a_feedback:'Feedback hinzufügen', a_reply:'Kunden antworten', a_client:'Kundenansicht', a_deliver:'Neue Version senden',
+  next_round:v=>`Runde ${v.n} beginnt mit dem nächsten Feedback.`, delivered_ago:v=>`Geliefert ${v.ago}.`,
+  past:'Frühere Runden', r_line:v=>`Runde ${v.n}, ${v.k} ${v.k===1?'Änderung':'Änderungen'}`,
+  log_t:'Änderungsprotokoll', copy_log:'Protokoll für die Rechnung kopieren', log_copied:'Protokoll für die Rechnung kopiert',
+  t_delivered:v=>`Runde ${v.n} geliefert`,
+  fb_t:'Feedback hinzufügen', fb_d:'Füge die Nachricht des Kunden ein. Jede Zeile wird zu einer Änderung, mit Zeit und Umfang.', fb_ph:'Logo etwas größer\nWärmerer Hintergrund\nVisitenkarte hinzufügen', fb_add:'Zur Runde hinzufügen', t_fb:v=>`${v.k} ${v.k===1?'Änderung':'Änderungen'} zu Runde ${v.n} hinzugefügt`,
+  rp_t:'Kunden antworten', rp_d:'Bezahlte Änderungen stehen mit Zeit und Preis drin. Gratis-Änderungen werden als inklusive aufgeführt.',
+  cl_t:v=>`Was ${v.c} sieht`, cl_d:'Ein Link, ohne Anmeldung. Der Kunde hakt die Extras an und bestätigt mit seinem Namen.', cl_hi:v=>`Hallo ${v.c}, diese Änderungen gehen über unsere Vereinbarung hinaus:`, cl_name:'Zur Bestätigung Namen eingeben', cl_ok:v=>`${v.sum} freigeben`, cl_total:'Summe', cl_none:'Gerade wartet nichts auf Freigabe.', cl_thx:'Freigegeben. Danke!', cl_note:v=>`Mit Name und Zeit gespeichert: ${v.name}, ${v.time}`, close:'Schließen', done:'Fertig',
+  ag_t:'Vereinbarung', f_fee:'Pauschalpreis', f_incl:'Inklusive Runden', f_deliv:'Leistungen, durch Komma getrennt', ph_deliv:'Logo, Speisekarte A4', save:'Speichern', t_ag:'Vereinbarung aktualisiert',
+  np_t:'Neues Projekt', f_pname:'Projektname', ph_pname:'z. B. Rebranding Bäckerei', create:'Projekt erstellen', plan_t:'Gratis-Tarif', plan_use:v=>`${v.n} von ${v.m} Projekten`, plan_pro:'Pro kommt bald: unbegrenzte Projekte, ein Freigabelink für Kunden und ein Änderungsprotokoll für Rechnungen. Die ersten 100 bekommen es ein Jahr gratis.', lim_t:'Du hast 10 Projekte', lim_d:'Im Gratis-Tarif sind bis zu 10 Projekte möglich. Lösche ein abgeschlossenes, um Platz zu schaffen. Pro mit unbegrenzten Projekten kommt bald.', lim_more:'Mehr über Pro', lim_ok:'Verstanden', soon:'Bald', t_np:'Projekt erstellt',
+  set_t:'Einstellungen', f_name:'Dein Name', ph_name:'z. B. Alex', f_lang:'Sprache', f_cur:'Währung', replay:'Einführung wiederholen', wipe:'Alle Daten löschen', wipe_q:'Alle Projekte, Schätzungen und den Verlauf auf diesem Gerät löschen? Das lässt sich nicht rückgängig machen.', t_reset:'Alle Daten gelöscht', demo:'Demodaten laden', t_demo:'Demodaten geladen', empty_t:'Hier beginnt dein erstes Projekt', empty_d:'Füge einen Kunden und eure Vereinbarung hinzu: Preis, inklusive Runden und Stundensatz. Den Rest zählt Rounds.', empty_btn:'Projekt erstellen', empty_try:'oder erst ein paar Änderungen schätzen', t_saved:'Gespeichert',
+  skip:'Überspringen', next:'Weiter', start:'Zu meinem Dashboard',
+  ob1_t:'Jede Runde, gezählt.', ob1_d:'Feedback kommt per E-Mail, WhatsApp und Anruf. Rounds behält im Blick, was die Vereinbarung abdeckt und was nicht.',
+  ob2_t:'Zusatzarbeit in Sekunden bepreisen.', ob2_d:'Gib ein, was der Kunde möchte. Rounds schlägt die Stunden vor, du passt sie an, und die Summe aktualisiert sich sofort.',
+  ob3_t:'Kopieren, senden, bezahlt werden.', ob3_d:'Eine fertige Nachricht für deinen Kunden auf Deutsch, Englisch oder Russisch. Keine Tabellen, kein peinliches Rechnen.',
+  ob4_t:'Wie sollen wir dich nennen?', ob4_d:'Dein Name steht unter den Nachrichten an Kunden. Dein Stundensatz ist der Ausgangspunkt jeder Schätzung.',
+  v_src1:'E-Mail', v_src2:'WhatsApp', v_src3:'Gesprächsnotizen', v_m1:'Kann das Logo etwas größer?', v_m2:'Bitte noch eine Visitenkarte 🙏', v_m3:'Vielleicht ein wärmerer Hintergrund?', v_round:'Runde 3 von 2 inklusive',
+  v_l1:'Logo größer', v_l2:'Wärmerer Hintergrund', v_l3:'Visitenkarte', v_tot:'Kunde zahlt',
+  v_msg:'Hallo Jonas,\ndanke für das Feedback! So viel Aufwand bedeuten die Änderungen…\nGesamt: 3 Std. 35 Min., 215 €', v_ok:'Jonas hat freigegeben',
+  ev_created:()=>'Projekt erstellt', ev_feedback:v=>`Runde ${v.n}: ${v.k} ${v.k===1?'Änderung':'Änderungen'} vom Kunden`, ev_delivered:v=>`Runde ${v.n} geliefert`, ev_approved:v=>`${v.c} hat ${money(v.sum)} Zusatzarbeit freigegeben`, ev_estimate:v=>`Schätzung an ${v.c} gesendet: ${money(v.sum)}`, ev_agreed:v=>`${v.c} hat ${money(v.sum)} zugestimmt`, ev_agreement:()=>'Vereinbarung aktualisiert',
+  log_head:v=>`Änderungsprotokoll: ${v.p} (${v.c})`, log_extra:'extra', log_incl:'inklusive', log_ok:'freigegeben',
+  anon:'Anonym', f_theme:'Design', th_sys:'System', th_light:'Hell', th_dark:'Dunkel'
 }};
 function t(k,v){ let s=I[S.lang]&&I[S.lang][k]; if(s==null){ (window.__miss=window.__miss||new Set()).add(S.lang+':'+k); s=I.en[k]; } if(s==null) return k; if(typeof s==='function') return s(v||{}); return s; }
 
@@ -826,7 +936,7 @@ function ic(n,s){ s=s||20; return `<svg class="ic" viewBox="0 0 24 24" width="${
 function mark(){ return `<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M52 24A22 22 0 1 0 54 38"/><path d="M53 9v15H38"/></svg>`; }
 const TC={warm:['#3B2C22','#FFD2AA'],blue:['#1E2536','#B9C7FF'],plum:['#2E2233','#E3C2FF'],moss:['#1F2E24','#B5E8C3'],sand:['#33301F','#F2E3A2']};
 const initials=s=>String(s||'').trim().split(/\s+/).slice(0,2).map(w=>w[0]||'').join('').toUpperCase()||'•';
-function tile(p){ const c=TC[p.color]||TC.warm; return `<span class="tile" style="background:${c[0]};color:${c[1]}">${esc(initials(p.name))}</span>`; }
+function tile(p){ const c=TC[p.color]||TC.warm; return `<span class="tile" style="--tb:${c[0]};--tf:${c[1]};background:var(--tb);color:var(--tf)">${esc(initials(p.name))}</span>`; }
 
 /* ================= account + sync ================= */
 const acct={state:'local',name:'',email:'',avatar:'',uid:null,at:0};
@@ -911,7 +1021,7 @@ function syncSeg(seg,instant){
 function syncSegs(root,instant){ $$('.seg',root).forEach(s=>syncSeg(s,instant)); }
 function seg(act,opts,val,extra,cls){ return `<div class="seg ${cls||''}" role="group"><span class="thumb"></span>${opts.map(o=>`<button type="button" class="${String(o[0])===String(val)?'on':''}" data-act="${act}" data-v="${esc(o[0])}" ${extra||''}>${esc(o[1])}</button>`).join('')}</div>`; }
 function setSeg(segEl,v){ $$('button',segEl).forEach(b=>b.classList.toggle('on',b.dataset.v===String(v))); syncSeg(segEl); }
-const langSeg=act=>seg(act||'lang',[['en','EN'],['ru','RU']],S.lang,'','sm');
+const langSeg=act=>seg(act||'lang',[['en','EN'],['de','DE'],['ru','RU']],S.lang,'','sm');
 
 /* ================= toast ================= */
 let toastT;
@@ -1053,7 +1163,7 @@ function vEstimate(){
     <div class="est-left">
       <div class="meta2 stag" style="--i:${i++}">
         <label class="field"><span>${esc(t('f_client'))}</span><input class="inp" id="eClient" value="${esc(d.client)}" placeholder="${esc(t('ph_client'))}" autocomplete="off"></label>
-        <label class="field"><span>${esc(t('f_rate'))}</span><span class="affix"><input class="inp tnum" id="eRate" inputmode="decimal" value="${esc(dRate()/100)}"><i>${esc(curSym())}/${S.lang==='ru'?'ч':'h'}</i></span></label>
+        <label class="field"><span>${esc(t('f_rate'))}</span><span class="affix"><input class="inp tnum" id="eRate" inputmode="decimal" value="${esc(dRate()/100)}"><i>${esc(curSym())}/${hU()}</i></span></label>
       </div>
       <div class="composer stag" style="--i:${i++}">
         <div class="row"><textarea id="comp" rows="1" placeholder="${esc(t('ph_change'))}" aria-label="${esc(t('ph_change'))}"></textarea><button class="add" id="compAdd" data-act="est-add" aria-label="${esc(t('add'))}" disabled>${ic('plus',22)}</button></div>
@@ -1226,22 +1336,23 @@ function vAccount(){
       <div class="card acc-id stag" style="--i:${i++}">${avatarHTML(true)}<div style="min-width:0"><b>${esc(acct.name||S.name||t('you'))}</b><span>${esc(acct.email||(acct.uid?t('acc_claude'):t('acc_local_short')))}</span></div></div>
       ${acct.cloud&&!acct.uid?`<div class="stag" style="--i:${i++}">${authBtns()}</div>`:''}
       <div class="card sync stag ${on?'on':''}" style="--i:${i++}" id="syncCard">${syncCardHTML()}</div>
+      ${planCard(i++)}
       <div class="card stag" style="--i:${i++};display:grid;gap:14px">
         <h2 class="h2">${esc(t('acc_help'))}</h2>
         <button class="hbtn press" data-act="m-tour">${ic('help')}${esc(t('tour_start'))}${ic('arrow',18)}</button>
         <button class="hbtn press" data-act="m-replay">${ic('send')}${esc(t('replay'))}${ic('arrow',18)}</button>
         <button class="hbtn press" data-act="m-demo">${ic('proj')}${esc(t('demo'))}${ic('arrow',18)}</button>
         <button class="lnk" data-act="m-reset" style="justify-self:start">${esc(t('wipe'))}</button>
-        <div style="display:flex;gap:18px;flex-wrap:wrap;font-size:13px"><a class="lnk" href="/privacy">${esc(t('l_priv'))}</a><a class="lnk" href="/impressum">Impressum</a></div>
         ${acct.uid?`<div style="display:flex;gap:18px;flex-wrap:wrap"><button class="lnk" data-act="g-signout">${esc(t('g_out'))}</button><button class="lnk" data-act="del-open">${esc(t('del_t'))}</button></div>`:''}
       </div>
     </div>
     <div class="card stag" style="--i:${i++};display:grid;gap:18px;align-content:start">
       <h2 class="h2">${esc(t('acc_prefs'))}</h2>
       <label class="field"><span>${esc(t('f_name'))}</span><input class="inp" id="acName" value="${esc(S.name)}" placeholder="${esc(acct.name||t('ph_name'))}" autocomplete="name"></label>
-      <label class="field"><span>${esc(t('f_rate'))}</span><span class="affix"><input class="inp tnum" id="acRate" inputmode="decimal" value="${esc(S.rate/100)}"><i>${esc(curSym())}/${S.lang==='ru'?'ч':'h'}</i></span></label>
-      <div class="field"><span>${esc(t('f_cur'))}</span>${seg('acc-cur',[['EUR','€ EUR'],['USD','$ USD'],['GBP','£ GBP'],['RUB','₽ RUB']],S.cur)}</div>
-      <div class="field"><span>${esc(t('f_lang'))}</span>${seg('lang',[['en','English'],['ru','Русский']],S.lang)}</div>
+      <label class="field"><span>${esc(t('f_rate'))}</span><span class="affix"><input class="inp tnum" id="acRate" inputmode="decimal" value="${esc(S.rate/100)}"><i>${esc(curSym())}/${hU()}</i></span></label>
+      <div class="field"><span>${esc(t('f_cur'))}</span>${seg('acc-cur',[['EUR','€ EUR'],['USD','$ USD'],['GBP','£ GBP']],S.cur)}</div>
+      <div class="field"><span>${esc(t('f_lang'))}</span>${seg('lang',LANGS,S.lang)}</div>
+      <div class="field"><span>${esc(t('f_theme'))}</span>${seg('theme',[['auto',t('th_sys')],['light',t('th_light')],['dark',t('th_dark')]],S.theme||'auto')}</div>
     </div>
   </div>`;
 }
@@ -1263,9 +1374,10 @@ function closeSheet(){ if(window.__pendingSession){ const j=window.__pendingSess
 function shSettings(){
   openSheet(`<h2>${esc(t('set_t'))}</h2>
     <label class="field"><span>${esc(t('f_name'))}</span><input class="inp" id="sName" value="${esc(S.name)}" placeholder="${esc(t('ph_name'))}"></label>
-    <label class="field"><span>${esc(t('f_rate'))}</span><span class="affix"><input class="inp tnum" id="sRate" inputmode="decimal" value="${esc(S.rate/100)}"><i>${esc(curSym())}/${S.lang==='ru'?'ч':'h'}</i></span></label>
-    <div class="field"><span>${esc(t('f_cur'))}</span>${seg('set-cur',[['EUR','€ EUR'],['USD','$ USD'],['GBP','£ GBP'],['RUB','₽ RUB']],S.cur)}</div>
-    <div class="field"><span>${esc(t('f_lang'))}</span>${seg('set-lang',[['en','English'],['ru','Русский']],S.lang)}</div>
+    <label class="field"><span>${esc(t('f_rate'))}</span><span class="affix"><input class="inp tnum" id="sRate" inputmode="decimal" value="${esc(S.rate/100)}"><i>${esc(curSym())}/${hU()}</i></span></label>
+    <div class="field"><span>${esc(t('f_cur'))}</span>${seg('set-cur',[['EUR','€ EUR'],['USD','$ USD'],['GBP','£ GBP']],S.cur)}</div>
+    <div class="field"><span>${esc(t('f_lang'))}</span>${seg('set-lang',LANGS,S.lang)}</div>
+     <div class="field"><span>${esc(t('f_theme'))}</span>${seg('theme',[['auto',t('th_sys')],['light',t('th_light')],['dark',t('th_dark')]],S.theme||'auto')}</div>
     <button class="btn wide press" data-act="set-save">${esc(t('save'))}</button>
     <div style="display:flex;gap:18px;justify-content:center"><button class="lnk" data-act="set-replay">${esc(t('replay'))}</button><button class="lnk" data-act="set-reset">${esc(t('wipe'))}</button></div>`);
 }
@@ -1303,10 +1415,25 @@ function shAgreement(){
   const p=P(S.pid);
   openSheet(`<h2>${esc(t('ag_t'))}</h2>
    <div class="row2"><label class="field"><span>${esc(t('f_fee'))}</span><span class="affix"><input class="inp tnum" id="agFee" inputmode="decimal" value="${esc(p.fee/100)}"><i>${esc(curSym())}</i></span></label>
-   <label class="field"><span>${esc(t('f_rate'))}</span><span class="affix"><input class="inp tnum" id="agRate" inputmode="decimal" value="${esc(p.rate/100)}"><i>${esc(curSym())}/${S.lang==='ru'?'ч':'h'}</i></span></label></div>
+   <label class="field"><span>${esc(t('f_rate'))}</span><span class="affix"><input class="inp tnum" id="agRate" inputmode="decimal" value="${esc(p.rate/100)}"><i>${esc(curSym())}/${hU()}</i></span></label></div>
    <label class="field"><span>${esc(t('f_incl'))}</span><input class="inp tnum" id="agIncl" inputmode="numeric" value="${esc(p.included)}"></label>
    <label class="field"><span>${esc(t('f_deliv'))}</span><input class="inp" id="agDeliv" value="${esc(p.deliverables.map(d=>Lx(d)).join(', '))}" placeholder="${esc(t('ph_deliv'))}"></label>
    <button class="btn wide press" data-act="ag-save">${esc(t('save'))}</button>`);
+}
+const FREE_LIMIT=10, PRO_URL='https://rounds.gt.tc/#pricing';
+function shLimit(){
+  openSheet(`<h2>${esc(t('lim_t'))}</h2><p style="color:var(--mu);line-height:1.5;margin:0 0 18px">${esc(t('lim_d'))}</p>
+   <button class="btn wide press" data-act="lim-ok">${esc(t('lim_ok'))}</button>
+   <a class="lnk" href="${PRO_URL}" target="_blank" rel="noopener" style="display:block;text-align:center;margin-top:14px">${esc(t('lim_more'))}</a>`);
+}
+function planCard(i){
+  const n=S.projects.length, pct=Math.min(100,Math.round(n/FREE_LIMIT*100)), full=n>=FREE_LIMIT;
+  return `<div class="card stag" style="--i:${i};display:grid;gap:12px">
+    <div style="display:flex;justify-content:space-between;align-items:baseline;gap:12px"><h2 class="h2">${esc(t('plan_t'))}</h2><span class="tnum" style="font-size:14px;color:${full?'var(--amber)':'var(--mu)'}">${esc(t('plan_use',{n:n,m:FREE_LIMIT}))}</span></div>
+    <div style="height:6px;border-radius:6px;background:var(--line);overflow:hidden"><div style="height:100%;width:${pct}%;background:${full?'var(--amber)':'var(--green)'};border-radius:6px"></div></div>
+    <p style="margin:0;font-size:14px;line-height:1.5;color:var(--mu)"><b style="color:var(--tx)">Pro · ${esc(t('soon'))}.</b> ${esc(t('plan_pro').replace(/^[^:]*:\s*/,''))}</p>
+    <a class="lnk" href="${PRO_URL}" target="_blank" rel="noopener" style="justify-self:start;font-size:14px">${esc(t('lim_more'))}</a>
+  </div>`;
 }
 function shNewProject(){
   openSheet(`<h2>${esc(t('np_t'))}</h2>
@@ -1314,7 +1441,7 @@ function shNewProject(){
    <div class="row2"><label class="field"><span>${esc(t('f_client'))}</span><input class="inp" id="npClient" placeholder="${esc(t('ph_client'))}"></label>
    <label class="field"><span>${esc(t('f_incl'))}</span><input class="inp tnum" id="npIncl" inputmode="numeric" value="2"></label></div>
    <div class="row2"><label class="field"><span>${esc(t('f_fee'))}</span><span class="affix"><input class="inp tnum" id="npFee" inputmode="decimal" value="800"><i>${esc(curSym())}</i></span></label>
-   <label class="field"><span>${esc(t('f_rate'))}</span><span class="affix"><input class="inp tnum" id="npRate" inputmode="decimal" value="${esc(S.rate/100)}"><i>${esc(curSym())}/${S.lang==='ru'?'ч':'h'}</i></span></label></div>
+   <label class="field"><span>${esc(t('f_rate'))}</span><span class="affix"><input class="inp tnum" id="npRate" inputmode="decimal" value="${esc(S.rate/100)}"><i>${esc(curSym())}/${hU()}</i></span></label></div>
    <label class="field"><span>${esc(t('f_deliv'))}</span><input class="inp" id="npDeliv" placeholder="${esc(t('ph_deliv'))}"></label>
    <button class="btn wide press" data-act="np-save">${esc(t('create'))}</button>`,r=>setTimeout(()=>{ try{ $('#npName',r).focus(); }catch(e){} },350));
 }
@@ -1360,10 +1487,10 @@ function renderOb(){
         ${last&&acct.uid?`<div class="chip g" style="margin-top:20px">${ic('check',14)}${esc(t('g_as',{e:acct.email||acct.name}))}</div>`:''}
         ${last?`<div class="ob-form" style="margin-top:24px">
           <label class="field"><span>${esc(t('f_name'))}</span><input class="inp" id="obName" value="${esc(ob.name||S.name)}" placeholder="${esc(t('ph_name'))}" autocomplete="given-name"></label>
-          <div class="two"><label class="field"><span>${esc(t('f_rate'))}</span><span class="affix"><input class="inp tnum" id="obRate" inputmode="decimal" value="${esc(rate)}"><i>${esc(curSym())}/${S.lang==='ru'?'ч':'h'}</i></span></label>
-          ${seg('ob-cur',[['EUR','€'],['USD','$'],['GBP','£'],['RUB','₽']],S.cur,'','')}</div></div>`:''}
+          <div class="two"><label class="field"><span>${esc(t('f_rate'))}</span><span class="affix"><input class="inp tnum" id="obRate" inputmode="decimal" value="${esc(rate)}"><i>${esc(curSym())}/${hU()}</i></span></label>
+          ${seg('ob-cur',[['EUR','€'],['USD','$'],['GBP','£']],S.cur,'','')}</div></div>`:''}
         <div class="ob-actions">${i>0?`<button class="btn ghost press" data-act="ob-back" style="flex:0 0 auto;width:50px;padding:0" aria-label="${esc(t('back'))}">${ic('back',20)}</button>`:''}<button class="btn press" data-act="${last?'ob-done':'ob-next'}">${esc(last?t('start'):t('next'))}${ic('arrow',18)}</button></div>
-        <div class="ob-foot">${ic('globe',18)}${seg('ob-lang',[['en','English'],['ru','Русский']],S.lang,'','sm')}${last?'':`<button class="lnk" data-act="ob-skip">${esc(t('skip'))}</button>`}</div>
+        <div class="ob-foot">${ic('globe',18)}${seg('ob-lang',LANGS,S.lang,'','sm')}${last?'':`<button class="lnk" data-act="ob-skip">${esc(t('skip'))}</button>`}</div>
       </div>
     </div></div>`;
   syncSegs($('#ob'),true); runCounts($('#ob'));
@@ -1469,7 +1596,7 @@ document.addEventListener('click',e=>{
     case 'm-open': go('project',{pid:el.dataset.pid}); closeMenu(); break;
     case 'm-settings': go('account'); closeMenu(); break;
     case 'act-f': S.actFilter=el.dataset.v; setSeg(el.closest('.seg'),S.actFilter); { const v=$('#view'); const tmp=document.createElement('div'); tmp.innerHTML=vActivity(); const nl=$('#actList',tmp); $('#actList').innerHTML=nl.innerHTML; $('#actList').classList.remove('flash'); reflow($('#actList')); $('#actList').classList.add('flash'); } break;
-    case 'acc-cur': S.cur=el.dataset.v; save(); setSeg(el.closest('.seg'),S.cur); { const i2=$('#acRate'); if(i2&&i2.nextElementSibling) i2.nextElementSibling.textContent=curSym()+'/'+(S.lang==='ru'?'ч':'h'); } break;
+    case 'acc-cur': S.cur=el.dataset.v; save(); setSeg(el.closest('.seg'),S.cur); { const i2=$('#acRate'); if(i2&&i2.nextElementSibling) i2.nextElementSibling.textContent=curSym()+'/'+hU(); } break;
     case 'm-q-est': go('estimate'); closeMenu(); setTimeout(()=>{ const c=$('#comp'); try{ c&&c.focus(); }catch(e){} },560); break;
     case 'm-q-fb': go('project',{pid:el.dataset.pid}); closeMenu(); setTimeout(shFeedback,520); break;
     case 'm-q-np': closeMenu(); setTimeout(shNewProject,380); break;
@@ -1482,6 +1609,7 @@ document.addEventListener('click',e=>{
     case 'tour-skip': endTour(); break;
 
     case 'sheet-close': closeSheet(); break;
+    case 'theme': S.theme=el.dataset.v; save(); applyTheme(); setSeg(el.closest('.seg'),S.theme); break;
     case 'set-cur': S.cur=el.dataset.v; setSeg(el.closest('.seg'),S.cur); save(); break;
     case 'set-save': { S.name=$('#sName').value.trim().slice(0,40); S.rate=Math.max(100,Math.round(num($('#sRate').value,S.rate/100)*100)); save(); closeSheet(); renderChrome(); renderView('swap'); toast(t('t_saved')); break; }
     case 'set-replay': closeSheet(); setTimeout(startOb,250); break;
@@ -1490,7 +1618,7 @@ document.addEventListener('click',e=>{
     case 'ob-next': obKeep(); ob.i=Math.min(3,ob.i+1); ob.dir='fwd'; renderOb(); break;
     case 'ob-back': obKeep(); ob.i=Math.max(0,ob.i-1); ob.dir='bwd'; renderOb(); break;
     case 'ob-skip': obKeep(); ob.i=3; ob.dir='fwd'; renderOb(); break;
-    case 'ob-cur': S.cur=el.dataset.v; save(); obKeep(); setSeg(el.closest('.seg'),S.cur); { const i=$('#obRoot .affix i'); if(i) i.textContent=curSym()+'/'+(S.lang==='ru'?'ч':'h'); const pv=$('#obPrevRate'); if(pv) pv.textContent=money(Math.round((ob.rate!=null?ob.rate:S.rate/100)*100)*3.5); } break;
+    case 'ob-cur': S.cur=el.dataset.v; save(); obKeep(); setSeg(el.closest('.seg'),S.cur); { const i=$('#obRoot .affix i'); if(i) i.textContent=curSym()+'/'+hU(); const pv=$('#obPrevRate'); if(pv) pv.textContent=money(Math.round((ob.rate!=null?ob.rate:S.rate/100)*100)*3.5); } break;
     case 'ob-done': finishOb(); break;
 
     case 'est-add': { const ta=$('#comp'); const lines=splitLines(ta.value); if(!lines.length) break; ta.value=''; autoGrow(ta); addEstItems(lines); ta.focus(); break; }
@@ -1539,8 +1667,9 @@ document.addEventListener('click',e=>{
     case 'pj-copylog': copyText(logText(P(S.pid))); toast(t('log_copied')); break;
     case 'pj-round': { const rp=el.closest('.rp'); const p=P(S.pid); const idx=$$('.rp').indexOf(rp); const rr=p.rounds.slice(0,-1).reverse()[idx];
       if(rp.classList.toggle('open')){ const ul=document.createElement('ul'); ul.innerHTML=rr.changes.map(c=>`<li>${esc(Lx(c.text))} <span style="color:var(--dim)">(${esc(dur(c.mins))})</span></li>`).join(''); rp.appendChild(ul); } else { const ul=$('ul',rp); if(ul) ul.remove(); } break; }
-    case 'np': shNewProject(); break;
-    case 'np-save': { const name=$('#npName').value.trim(); if(!name){ $('#npName').focus(); break; }
+    case 'np': if(S.projects.length>=FREE_LIMIT){ shLimit(); break; } shNewProject(); break;
+    case 'lim-ok': closeSheet(); break;
+    case 'np-save': { if(S.projects.length>=FREE_LIMIT){ closeSheet(); setTimeout(shLimit,260); break; } const name=$('#npName').value.trim(); if(!name){ $('#npName').focus(); break; }
       const cols=Object.keys(TC); const p={id:'p'+uid(),name:name.slice(0,48),client:$('#npClient').value.trim()||'—',color:cols[S.projects.length%cols.length],fee:Math.round(num($('#npFee').value,800)*100),rate:Math.max(100,Math.round(num($('#npRate').value,S.rate/100)*100)),included:Math.max(0,Math.min(20,Math.round(num($('#npIncl').value,2)))),created:Date.now(),
         deliverables:$('#npDeliv').value.split(',').map(s=>s.trim()).filter(Boolean),rounds:[{n:1,status:'collecting',at:Date.now(),changes:[]}],events:[{at:Date.now(),type:'created'}]};
       S.projects.unshift(p); save(); closeSheet(); setTimeout(()=>{ go('project',{pid:p.id}); toast(t('t_np')); },220); break; }
@@ -1572,7 +1701,18 @@ document.addEventListener('paste',e=>{
 });
 let rz; window.addEventListener('resize',()=>{ clearTimeout(rz); rz=setTimeout(()=>{ syncSegs(document,true); if(tour&&tour.el) placeTour(tour.el); },120); });
 
+/* ================= theme ================= */
+const mqLight=window.matchMedia?matchMedia('(prefers-color-scheme: light)'):null;
+function applyTheme(){
+  const pref=S.theme||'auto', eff=pref==='auto'?(mqLight&&mqLight.matches?'light':'dark'):pref;
+  document.documentElement.setAttribute('data-theme',eff);
+  const m=document.querySelector('meta[name="theme-color"]'); if(m) m.setAttribute('content',eff==='light'?'#F5F5F2':'#0E0E0F');
+  try{ localStorage.setItem('rounds:theme',pref); }catch(e){}
+}
+if(mqLight){ const f=()=>{ if((S.theme||'auto')==='auto') applyTheme(); }; mqLight.addEventListener?mqLight.addEventListener('change',f):mqLight.addListener(f); }
+
 /* ================= boot ================= */
+applyTheme();
 document.documentElement.lang=S.lang;
 S.sheetOpen=false;
 if(S.route==='project'&&!P(S.pid)) S.route='home';
